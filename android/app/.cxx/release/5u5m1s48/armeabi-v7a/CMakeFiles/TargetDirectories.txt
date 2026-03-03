@@ -1,0 +1,2 @@
+D:/NighaTech/Projects/Dial_app/pro_dialer/android/app/.cxx/release/5u5m1s48/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/NighaTech/Projects/Dial_app/pro_dialer/android/app/.cxx/release/5u5m1s48/armeabi-v7a/CMakeFiles/rebuild_cache.dir

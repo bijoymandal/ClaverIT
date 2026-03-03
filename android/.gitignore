@@ -1,0 +1,50 @@
+# Flutter
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+coverage/
+.pub/
+.pub-cache/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Android
+android/.gradle/
+android/local.properties
+android/app/debug.keystore
+android/build/
+android/**/captures/
+android/.cxx/
+
+# Gradle wrapper
+gradle-wrapper.jar
+/gradle/
+/gradlew
+/gradlew.bat
+
+# Keystore (NEVER COMMIT)
+key.properties
+**/*.keystore
+**/*.jks
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/ephemeral/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/build/
+ios/.generated/
