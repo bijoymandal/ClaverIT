@@ -6,6 +6,7 @@ import '../models/registration_data.dart';
 import '../services/auth_service.dart';
 import '../providers/user_provider.dart';
 import 'dashboard_screen.dart';
+import 'registration_step1_screen.dart';
 
 enum VerificationType { phone, aadhaar }
 
@@ -143,9 +144,11 @@ class _VerificationScreenState extends State<VerificationScreen> {
           return;
         }
 
-        final isExistingUser = !result.isNewUser && result.hasToken;
-
-        if (isExistingUser) {
+        // Login flow handling:
+        // - If server returned a valid token (successful login), go to dashboard.
+        // - If server indicates new/unregistered user (e.g., 401/account-not-found),
+        //   redirect to signup (PersonalDetailsScreen).
+        if (result.hasToken && !result.isNewUser) {
           await Provider.of<UserProvider>(
             context,
             listen: false,
@@ -155,8 +158,20 @@ class _VerificationScreenState extends State<VerificationScreen> {
             MaterialPageRoute(builder: (context) => const DashboardScreen()),
             (route) => false,
           );
+        } else if (result.isNewUser) {
+          // Redirect unregistered users to signup flow (personal details)
+          widget.registrationData.phoneOtp = otp;
+          if (!mounted) return;
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => PersonalDetailsScreen(
+                registrationData: widget.registrationData,
+              ),
+            ),
+            (route) => false,
+          );
         } else {
-          // New user flow: move to Aadhaar OTP verification.
+          // Fallback: proceed to Aadhaar verification for registration flows
           widget.registrationData.phoneOtp = otp;
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -406,7 +421,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                     padding: EdgeInsets.only(
                                       right: index == 5 ? 0 : 12,
                                     ),
-                                    child: _buildOtpBox(index),
+                                    child: ConstrainedBox(
+                                      constraints: const BoxConstraints(
+                                        maxWidth: 60,
+                                      ),
+                                      child: _buildOtpBox(index),
+                                    ),
                                   );
                                 }),
                               ),
@@ -551,7 +571,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   Widget _buildOtpBox(int index) {
     return SizedBox(
-      width: 46,
+      width: 40,
       child: TextField(
         controller: _otpControllers[index],
         focusNode: _focusNodes[index],

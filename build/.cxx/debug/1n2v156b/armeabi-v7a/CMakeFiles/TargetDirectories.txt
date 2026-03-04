@@ -1,0 +1,2 @@
+/Volumes/MYSSD/FlutterProject/ClaverIT/build/.cxx/debug/1n2v156b/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Volumes/MYSSD/FlutterProject/ClaverIT/build/.cxx/debug/1n2v156b/armeabi-v7a/CMakeFiles/rebuild_cache.dir

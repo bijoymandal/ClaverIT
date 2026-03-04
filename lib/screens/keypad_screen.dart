@@ -276,7 +276,7 @@ class _KeypadScreenState extends State<KeypadScreen>
         color: const Color(0xFF1C1C1E),
         borderRadius: BorderRadius.circular(24),
       ),
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -285,7 +285,7 @@ class _KeypadScreenState extends State<KeypadScreen>
               _phoneNumber,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 32,
+                fontSize: 28,
                 fontWeight: FontWeight.w400,
                 letterSpacing: 1,
               ),
@@ -296,7 +296,7 @@ class _KeypadScreenState extends State<KeypadScreen>
           if (_phoneNumber.isNotEmpty && _showCursor)
             Container(
               width: 2,
-              height: 32,
+              height: 28,
               color: const Color(0xFF10B981),
               margin: const EdgeInsets.only(left: 4),
             ),
@@ -382,7 +382,7 @@ class _KeypadScreenState extends State<KeypadScreen>
 
   Widget _buildKeypad() {
     return Container(
-      padding: const EdgeInsets.only(top: 20, bottom: 20),
+      padding: const EdgeInsets.only(top: 15, bottom: 15),
       decoration: const BoxDecoration(
         color: Color(0xFF1C1C1E), // Dark container for keypad
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
@@ -401,10 +401,10 @@ class _KeypadScreenState extends State<KeypadScreen>
           if (_phoneNumber.isNotEmpty)
             _buildPhoneNumberDisplay()
           else
-            const SizedBox(height: 50), // Spacer when no number
+            const SizedBox(height: 20), // Spacer when no number
           // Keypad Grid
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -425,11 +425,11 @@ class _KeypadScreenState extends State<KeypadScreen>
             ),
           ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
 
           // Action Buttons Row
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -438,7 +438,7 @@ class _KeypadScreenState extends State<KeypadScreen>
                   icon: Icons.videocam_rounded,
                   onPressed: () {},
                   color: const Color(0xFF2C2C2E),
-                  size: 56,
+                  size: 40,
                 ),
 
                 // Call Button
@@ -449,12 +449,12 @@ class _KeypadScreenState extends State<KeypadScreen>
                   icon: Icons.backspace_outlined,
                   onPressed: _onBackspace,
                   color: const Color(0xFF2C2C2E),
-                  size: 56,
+                  size: 40,
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 2),
         ],
       ),
     );
@@ -464,13 +464,13 @@ class _KeypadScreenState extends State<KeypadScreen>
   Widget _buildSquircleKeypadButton(String number, String letters) {
     return Material(
       color: const Color(0xFF2C2C2E), // Solid dark grey
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(13),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(13),
         onTap: () => _onKeypadPressed(number),
         child: Container(
           alignment: Alignment.center,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(13)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -479,7 +479,7 @@ class _KeypadScreenState extends State<KeypadScreen>
                 number,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 28,
+                  fontSize: 20,
                   fontWeight: FontWeight.w400,
                   height: 1.0,
                 ),
@@ -487,7 +487,7 @@ class _KeypadScreenState extends State<KeypadScreen>
               // Small Alphabets below number
               if (letters.isNotEmpty)
                 Padding(
-                  padding: const EdgeInsets.only(top: 2),
+                  padding: const EdgeInsets.only(top: 1),
                   child: Text(
                     letters,
                     style: TextStyle(
@@ -508,8 +508,8 @@ class _KeypadScreenState extends State<KeypadScreen>
   // ✅ NEON GLOW CALL BUTTON
   Widget _buildNeonCallButton() {
     return Container(
-      width: 72,
-      height: 72,
+      width: 52,
+      height: 52,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: const Color(0xFF10B981),
@@ -555,4 +555,3 @@ class _KeypadScreenState extends State<KeypadScreen>
     );
   }
 }
-

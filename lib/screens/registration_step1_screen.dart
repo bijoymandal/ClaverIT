@@ -141,11 +141,21 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
       );
       return;
     }
+    String _formatPhoneForApi(String phone) {
+      final digits = phone.replaceAll(RegExp(r'[^0-9]'), '');
+      if (digits.length == 10) return '+91$digits';
+      if (digits.length == 11 && digits.startsWith('0'))
+        return '+91${digits.substring(1)}';
+      if (digits.length == 12 && digits.startsWith('91')) return '+$digits';
+      return phone;
+    }
+
+    final formatted = _formatPhoneForApi(phone);
 
     setState(() => _isSendingPhoneOtp = true);
     try {
-      await _authService.sendPhoneOtp(phone);
-      widget.registrationData.phoneNumber = phone;
+      await _authService.sendPhoneOtp(formatted);
+      widget.registrationData.phoneNumber = formatted;
       widget.registrationData.phoneOtp = null;
       setState(() => _isPhoneOtpSent = true);
       if (!mounted) return;
@@ -407,8 +417,8 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
         _buildTextField(
           controller: _nameController,
           hint: 'Enter your full name',
-          validator: (value) =>
-              value == null || value.isEmpty ? 'Please enter your name' : null,
+          // validator: (value) =>
+          //     value == null || value.isEmpty ? 'Please enter your name' : null,
         ),
         const SizedBox(height: 16),
         _buildLabel('Email Address'),
