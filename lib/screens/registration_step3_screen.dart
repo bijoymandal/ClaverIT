@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pro_dialer/widgets/auth_stepper.dart';
+import 'package:claverit/widgets/auth_stepper.dart';
 import '../models/registration_data.dart';
 import '../services/auth_service.dart';
 import 'verification_screen.dart';

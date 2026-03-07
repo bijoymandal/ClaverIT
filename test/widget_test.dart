@@ -7,7 +7,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:pro_dialer/main.dart';
+import 'package:claverit/main.dart';
 
 void main() {
   testWidgets('Registration screen renders correctly', (WidgetTester tester) async {

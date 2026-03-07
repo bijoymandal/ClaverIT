@@ -1,3 +1,4 @@
+import 'package:claverit/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/my_profile.dart';
@@ -240,60 +241,149 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   Widget _buildSectionGap() => const SizedBox(height: 16);
 
+  // Widget _buildProfileHeader(UserProvider userProvider) {
+  //   final profile = userProvider.profile!;
+  //   return Column(
+  //     children: [
+  //       Stack(
+  //         clipBehavior: Clip.none,
+  //         alignment: Alignment.bottomCenter,
+  //         children: [
+  //           // Banner
+  //           Container(
+  //             height: 120,
+  //             width: double.infinity,
+  //             decoration: const BoxDecoration(color: Color(0xFF2A2A2A)),
+  //             child: Container(
+  //               decoration: BoxDecoration(
+  //                 gradient: LinearGradient(
+  //                   begin: Alignment.topCenter,
+  //                   end: Alignment.bottomCenter,
+  //                   colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //           // Avatar
+  //           Positioned(
+  //             bottom: -40,
+  //             left: 24,
+  //             child: Container(
+  //               padding: const EdgeInsets.all(4),
+  //               decoration: const BoxDecoration(
+  //                 color: Colors.black,
+  //                 shape: BoxShape.circle,
+  //               ),
+  //               child: CircleAvatar(
+  //                 radius: 40,
+  //                 backgroundColor: const Color(0xFF10B981),
+  //                 child: Text(
+  //                   userProvider.initials,
+  //                   style: const TextStyle(
+  //                     color: Colors.white,
+  //                     fontSize: 32,
+  //                     fontWeight: FontWeight.bold,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //           // Edit Button
+  //           Positioned(
+  //             top: 16,
+  //             right: 16,
+  //             child: Container(
+  //               decoration: BoxDecoration(
+  //                 color: Colors.black.withValues(alpha: 0.5),
+  //                 shape: BoxShape.circle,
+  //               ),
+  //               child: IconButton(
+  //                 icon: const Icon(Icons.edit, color: Colors.white),
+  //                 onPressed: _showEditProfileDialog,
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       const SizedBox(height: 50),
+
+  //       // Name & Role
+  //       Padding(
+  //         padding: const EdgeInsets.symmetric(horizontal: 24),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Text(
+  //               profile.name,
+  //               style: const TextStyle(
+  //                 color: Colors.white,
+  //                 fontSize: 22,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             const SizedBox(height: 4),
+  //             if (profile.designation.isNotEmpty)
+  //               Text(
+  //                 profile.designation,
+  //                 style: const TextStyle(
+  //                   color: Color(0xFF10B981),
+  //                   fontSize: 16,
+  //                   fontWeight: FontWeight.w600,
+  //                 ),
+  //               ),
+  //             if (profile.organization.isNotEmpty)
+  //               Text(
+  //                 profile.organization,
+  //                 style: const TextStyle(color: Colors.grey, fontSize: 14),
+  //               ),
+  //             const SizedBox(height: 24),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
   Widget _buildProfileHeader(UserProvider userProvider) {
     final profile = userProvider.profile!;
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Stack(
           clipBehavior: Clip.none,
-          alignment: Alignment.bottomCenter,
           children: [
-            // Banner
+            // Banner Image
             Container(
-              height: 120,
+              height: 180,
               width: double.infinity,
-              decoration: const BoxDecoration(color: Color(0xFF2A2A2A)),
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
-                  ),
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/profile_background.png"),
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
-            // Avatar
-            Positioned(
-              bottom: -40,
-              left: 24,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                  shape: BoxShape.circle,
-                ),
-                child: CircleAvatar(
-                  radius: 40,
-                  backgroundColor: const Color(0xFF10B981),
-                  child: Text(
-                    userProvider.initials,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+
+            // Dark gradient overlay
+            Container(
+              height: 180,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
                 ),
               ),
             ),
+
             // Edit Button
             Positioned(
-              top: 16,
+              top: 40,
               right: 16,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.5),
+                  color: Colors.black.withOpacity(0.5),
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(
@@ -302,40 +392,131 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
               ),
             ),
+
+            // Chat Button
+            Positioned(
+              right: 16,
+              bottom: -24,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF10B981),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF10B981).withOpacity(0.6),
+                      blurRadius: 20,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.chat_bubble_outline,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    // add chat action
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChatScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            // Avatar
+            Positioned(
+              left: 24,
+              bottom: -50,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                  shape: BoxShape.circle,
+                ),
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundColor: const Color(0xFF10B981),
+                  child: Text(
+                    userProvider.initials,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
-        const SizedBox(height: 50),
 
-        // Name & Role
+        const SizedBox(height: 60),
+
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Name
               Text(
                 profile.name,
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 4),
+
+              const SizedBox(height: 6),
+
+              // Designation
               if (profile.designation.isNotEmpty)
                 Text(
                   profile.designation,
                   style: const TextStyle(
+                    fontSize: 18,
                     color: Color(0xFF10B981),
-                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+
+              const SizedBox(height: 4),
+
+              // Organization
               if (profile.organization.isNotEmpty)
                 Text(
                   profile.organization,
-                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  style: const TextStyle(color: Colors.grey, fontSize: 15),
                 ),
-              const SizedBox(height: 24),
+
+              const SizedBox(height: 20),
+
+              // Add to Contact Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF10B981),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40),
+                    ),
+                  ),
+                  child: const Text(
+                    "Add to Contacts",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -547,4 +728,3 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 }
-

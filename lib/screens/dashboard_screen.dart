@@ -17,6 +17,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
   late PageController _pageController;
+  bool _isOnline = true;
 
   @override
   void initState() {
@@ -70,22 +71,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      profile?.name ?? 'Loading...',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+                // Make name responsive: allow truncation with ellipsis
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          profile?.name ?? 'Loading...',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          softWrap: false,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
-                    const Text(
-                      'Online',
-                      style: TextStyle(color: Colors.green, fontSize: 10),
-                    ),
-                  ],
+                      const Text(
+                        'Online',
+                        style: TextStyle(color: Colors.green, fontSize: 10),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             );
@@ -101,8 +111,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () {},
           ),
           Switch(
-            value: true,
-            onChanged: (val) {},
+            value: _isOnline,
+            onChanged: (val) => setState(() => _isOnline = val),
             activeThumbColor: const Color(0xFF10B981),
           ),
         ],

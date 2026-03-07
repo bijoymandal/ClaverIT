@@ -22,35 +22,35 @@ class _EventsTabState extends State<EventsTab>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const ScheduleMeetingScreen(),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF10B981),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                ),
-                child: const Text(
-                  'Schedule Meeting',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 16),
+          //   // child: SizedBox(
+          //   //   width: double.infinity,
+          //   //   child: ElevatedButton(
+          //   //     onPressed: () {
+          //   //       Navigator.of(context).push(
+          //   //         MaterialPageRoute(
+          //   //           builder: (context) => const ScheduleMeetingScreen(),
+          //   //         ),
+          //   //       );
+          //   //     },
+          //   //     style: ElevatedButton.styleFrom(
+          //   //       backgroundColor: const Color(0xFF10B981),
+          //   //       padding: const EdgeInsets.symmetric(vertical: 14),
+          //   //       shape: RoundedRectangleBorder(
+          //   //         borderRadius: BorderRadius.circular(24),
+          //   //       ),
+          //   //     ),
+          //   //     // child: const Text(
+          //   //     //   'Schedule Meeting',
+          //   //     //   style: TextStyle(
+          //   //     //     color: Colors.white,
+          //   //     //     fontWeight: FontWeight.bold,
+          //   //     //   ),
+          //   //     // ),
+          //   //   ),
+          //   ),
+          // ),
           const SizedBox(height: 16),
           const SectionHeader(title: 'Upcoming Events', action: 'See All'),
           // Event 1
@@ -220,4 +220,3 @@ class _EventsTabState extends State<EventsTab>
     );
   }
 }
-

@@ -11,6 +11,7 @@ import 'services/auth_service.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/registration_step1_screen.dart';
+import 'screens/initial_screen.dart';
 
 // Global navigator key to access navigation without context
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -53,7 +54,7 @@ class _ProDialerAppState extends State<ProDialerApp> {
       ],
       child: MaterialApp(
         navigatorKey: navigatorKey,
-        title: 'Pro Dialer',
+        title: 'ClaverIT',
         debugShowCheckedModeBanner: false,
         routes: {
           '/login': (context) => const PhoneInputScreen(),
@@ -74,25 +75,7 @@ class _ProDialerAppState extends State<ProDialerApp> {
             elevation: 0,
           ),
         ),
-        home: FutureBuilder<String?>(
-          future: AuthService.getAuthToken(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Scaffold(
-                backgroundColor: Color(0xFF121212),
-                body: Center(
-                  child: CircularProgressIndicator(color: Color(0xFF10B981)),
-                ),
-              );
-            }
-            if (snapshot.hasData &&
-                snapshot.data != null &&
-                snapshot.data!.isNotEmpty) {
-              return const DashboardScreen();
-            }
-            return PersonalDetailsScreen(registrationData: RegistrationData());
-          },
-        ),
+        home: const InitialScreen(),
       ),
     );
   }

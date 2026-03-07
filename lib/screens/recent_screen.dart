@@ -19,6 +19,7 @@ class _RecentScreenState extends State<RecentScreen>
   List<CallLogEntry> _callLogs = [];
   bool _isLoading = true;
   bool _permissionDenied = false;
+  String _selectedFilter = 'Both';
   String? _error;
 
   // Search State
@@ -42,13 +43,26 @@ class _RecentScreenState extends State<RecentScreen>
   }
 
   List<CallLogEntry> get _filteredLogs {
-    if (_searchQuery.isEmpty) return _callLogs;
-    return _callLogs.where((log) {
-      final name = log.displayName.toLowerCase();
-      final number = (log.number ?? '').replaceAll(RegExp(r'\D'), '');
-      final query = _searchQuery.toLowerCase();
-      return name.contains(query) || number.contains(query);
-    }).toList();
+    List<CallLogEntry> logs = _callLogs;
+
+    // SIM filter
+    if (_selectedFilter == 'SIM 1 - Airtel') {
+      logs = logs.where((log) => log.simDisplayName == 'Airtel').toList();
+    } else if (_selectedFilter == 'SIM 2 - Jio') {
+      logs = logs.where((log) => log.simDisplayName == 'Jio').toList();
+    }
+
+    // Search filter
+    if (_searchQuery.isNotEmpty) {
+      logs = logs.where((log) {
+        final name = log.displayName.toLowerCase();
+        final number = (log.number ?? '').replaceAll(RegExp(r'\D'), '');
+        final query = _searchQuery.toLowerCase();
+        return name.contains(query) || number.contains(query);
+      }).toList();
+    }
+
+    return logs;
   }
 
   Future<void> _loadCallLogs() async {
@@ -183,11 +197,11 @@ class _RecentScreenState extends State<RecentScreen>
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
-                _buildFilterChip('Both', false),
+                _buildFilterChip('Both'),
                 const SizedBox(width: 12),
-                _buildFilterChip('SIM 1 - Airtel', true), // Dummy selected
+                _buildFilterChip('SIM 1 - Airtel'), // Dummy selected
                 const SizedBox(width: 12),
-                _buildFilterChip('SIM 2 - Jio', false),
+                _buildFilterChip('SIM 2 - Jio'),
               ],
             ),
           ),
@@ -199,18 +213,30 @@ class _RecentScreenState extends State<RecentScreen>
     );
   }
 
-  Widget _buildFilterChip(String label, bool isSelected) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      decoration: BoxDecoration(
-        color: isSelected ? const Color(0xFF10B981) : const Color(0xFF1C1C1E),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: isSelected ? Colors.white : Colors.grey,
-          fontWeight: FontWeight.w500,
+  Widget _buildFilterChip(String label) {
+    final bool isSelected = _selectedFilter == label;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedFilter = label;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFF10B981) : const Color(0xFF1C1C1E),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF10B981) : Colors.grey.shade700,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.grey,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );
@@ -253,7 +279,7 @@ class _RecentScreenState extends State<RecentScreen>
               ),
               const SizedBox(height: 16),
               const Text(
-                'Pro Dialer needs permission to access your call history to display recent calls.',
+                'ClaverIT needs permission to access your call history to display recent calls.',
                 style: TextStyle(color: Colors.grey),
                 textAlign: TextAlign.center,
               ),

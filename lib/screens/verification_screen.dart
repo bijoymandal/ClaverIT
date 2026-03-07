@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
-import 'package:pro_dialer/widgets/auth_stepper.dart';
+import 'package:claverit/widgets/auth_stepper.dart';
 import '../models/registration_data.dart';
 import '../services/auth_service.dart';
 import '../providers/user_provider.dart';

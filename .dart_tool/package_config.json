@@ -434,7 +434,7 @@
       "languageVersion": "3.3"
     },
     {
-      "name": "pro_dialer",
+      "name": "claverit",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "3.10"

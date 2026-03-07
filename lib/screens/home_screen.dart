@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           style: TextStyle(color: Colors.white),
         ),
         content: const Text(
-          'Pro Dialer needs Phone, Contacts, and Microphone permissions to function properly. Please grant these permissions in Settings.',
+          'ClaverIT needs Phone, Contacts, and Microphone permissions to function properly. Please grant these permissions in Settings.',
           style: TextStyle(color: Colors.grey),
         ),
         actions: [
@@ -194,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
-                  'Please grant all required permissions to use Pro Dialer',
+                  'Please grant all required permissions to use ClaverIT',
                   style: TextStyle(color: Colors.grey, fontSize: 14),
                   textAlign: TextAlign.center,
                 ),

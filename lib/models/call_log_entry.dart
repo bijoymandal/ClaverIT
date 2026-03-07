@@ -5,6 +5,7 @@ class CallLogEntry {
   final String? number;
   final int? timestamp;
   final int? duration;
+  final String? simDisplayName;
   final CallType? callType;
   final String? cachedMatchedNumber;
 
@@ -13,6 +14,7 @@ class CallLogEntry {
     this.number,
     this.timestamp,
     this.duration,
+    this.simDisplayName,
     this.callType,
     this.cachedMatchedNumber,
   });
@@ -24,6 +26,7 @@ class CallLogEntry {
       number: callLogEntry.number,
       timestamp: callLogEntry.timestamp,
       duration: callLogEntry.duration,
+      simDisplayName: callLogEntry.simDisplayName,
       // Note: 'callType' coming from the package is usually an enum (CallType)
       // but sometimes it is treated as dynamic. We convert it safely.
       callType: _parseCallType(callLogEntry.callType),

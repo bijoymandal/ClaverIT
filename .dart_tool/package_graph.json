@@ -1,10 +1,10 @@
 {
   "roots": [
-    "pro_dialer"
+    "claverit"
   ],
   "packages": [
     {
-      "name": "pro_dialer",
+      "name": "claverit",
       "version": "1.0.0+1",
       "dependencies": [
         "animations",

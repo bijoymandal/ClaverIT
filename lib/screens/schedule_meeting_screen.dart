@@ -60,7 +60,8 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
 
         String period = hour >= 12 ? 'PM' : 'AM';
         int displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
-        String label = '${displayHour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $period';
+        String label =
+            '${displayHour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $period';
 
         _timeSlots.add({
           'label': label,
@@ -111,13 +112,14 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
       'description': _notesController.text.trim().isEmpty
           ? null
           : _notesController.text.trim(),
-      'eventType': 'health',
-      'visibility': 'private',
+      // 'eventType': 'health',
+      // 'visibility': 'private',
       'startTime': startTime.toIso8601String(),
       'endTime': endTime.toIso8601String(),
-      'allDay': false,
-      'location': meeting['location'] as String,
-      'color': '#10B981',
+      // API expects `allDay` (not `isAllDay`) and does not accept recurrence/invitees here
+      // 'allDay': false,
+      // 'location': meeting['location'] as String,
+      // 'color': '#10B981',
     };
 
     setState(() {
@@ -125,6 +127,7 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
     });
 
     try {
+      print('Submitting appointment with payload: $payload');
       await _eventService.createEvent(payload);
 
       if (!mounted) return;
@@ -171,39 +174,53 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Container(
+              //   height: 160,
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     gradient: const LinearGradient(
+              //       colors: [Color(0xFF00C853), Color(0xFF1DE9B6)],
+              //       begin: Alignment.topLeft,
+              //       end: Alignment.bottomRight,
+              //     ),
+              //     borderRadius: BorderRadius.circular(16),
+              //   ),
+              //   child: Row(
+              //     children: [
+              //       const SizedBox(width: 16),
+              //       const Icon(
+              //         Icons.event_available,
+              //         color: Colors.white,
+              //         size: 64,
+              //       ),
+              //       const SizedBox(width: 16),
+              //       const Expanded(
+              //         child: Text(
+              //           'SCHEDULE MEETING',
+              //           style: TextStyle(
+              //             color: Colors.white,
+              //             fontSize: 24,
+              //             fontWeight: FontWeight.bold,
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               Container(
-                height: 160,
                 width: double.infinity,
+                height: 180,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF00C853), Color(0xFF1DE9B6)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
                   borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    const SizedBox(width: 16),
-                    const Icon(
-                      Icons.event_available,
-                      color: Colors.white,
-                      size: 64,
-                    ),
-                    const SizedBox(width: 16),
-                    const Expanded(
-                      child: Text(
-                        'SCHEDULE MEETING',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
+                  image: const DecorationImage(
+                    image: AssetImage(
+                      "assets/images/events.webp",
+                    ), // your banner image
+                    fit: BoxFit.cover, // fills the container properly
+                  ),
                 ),
               ),
+              const SizedBox(height: 16),
               const SizedBox(height: 24),
               _buildMeetingTypeCard(),
               const SizedBox(height: 24),
@@ -435,4 +452,3 @@ class _ScheduleMeetingScreenState extends State<ScheduleMeetingScreen> {
     );
   }
 }
-

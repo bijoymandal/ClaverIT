@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pro_dialer/models/registration_data.dart';
+import 'package:claverit/models/registration_data.dart';
 import 'verification_screen.dart';
 
 class PhoneInputScreen extends StatefulWidget {
@@ -278,43 +278,56 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
+                  // Container(
+                  //   width: double.infinity,
+                  //   height: 180,
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(16),
+                  //     gradient: const LinearGradient(
+                  //       colors: [
+                  //         Color(0xFFE6D7F7),
+                  //         Color(0xFFEAF5F1),
+                  //         Color(0xFFFAD8D8),
+                  //       ],
+                  //       begin: Alignment.topLeft,
+                  //       end: Alignment.bottomRight,
+                  //     ),
+                  //   ),
+                  //   child: const Column(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       Icon(Icons.public, color: Color(0xFF4B5563), size: 30),
+                  //       SizedBox(height: 12),
+                  //       // Text(
+                  //       //   'Your World, Connected',
+                  //       //   style: TextStyle(
+                  //       //     color: Color(0xFF1F2937),
+                  //       //     fontSize: 24,
+                  //       //     fontWeight: FontWeight.bold,
+                  //       //   ),
+                  //       // ),
+                  //       SizedBox(height: 6),
+                  //       Text(
+                  //         'Claim, modern, emotional and trustworthy',
+                  //         style: TextStyle(
+                  //           color: Color(0xFF4B5563),
+                  //           fontSize: 12,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   Container(
                     width: double.infinity,
                     height: 180,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFFE6D7F7),
-                          Color(0xFFEAF5F1),
-                          Color(0xFFFAD8D8),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                      image: const DecorationImage(
+                        image: AssetImage(
+                          "assets/images/dailpad2.webp",
+                        ), // your banner image
+                        fit: BoxFit.cover, // fills the container properly
                       ),
-                    ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.public, color: Color(0xFF4B5563), size: 30),
-                        SizedBox(height: 12),
-                        Text(
-                          'Your World, Connected',
-                          style: TextStyle(
-                            color: Color(0xFF1F2937),
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 6),
-                        Text(
-                          'Claim, modern, emotional and trustworthy',
-                          style: TextStyle(
-                            color: Color(0xFF4B5563),
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                   const SizedBox(height: 16),

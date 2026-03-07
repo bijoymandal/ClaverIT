@@ -1,3 +1,4 @@
+import 'package:claverit/screens/recent_screen.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/section_header.dart';
 
@@ -20,51 +21,79 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Banner Section
+          // Container(
+          //   height: 160,
+          //   margin: const EdgeInsets.all(16),
+          //   decoration: BoxDecoration(
+          //     gradient: const LinearGradient(
+          //       colors: [Colors.purple, Colors.blue],
+          //       begin: Alignment.topLeft,
+          //       end: Alignment.bottomRight,
+          //     ),
+          //     borderRadius: BorderRadius.circular(20),
+          //   ),
+          //   child: Stack(
+          //     children: [
+          //       Positioned(
+          //         top: 20,
+          //         left: 20,
+          //         right: 20,
+          //         child: SingleChildScrollView(
+          //           scrollDirection: Axis.horizontal,
+          //           child: Row(
+          //             mainAxisAlignment: MainAxisAlignment.start,
+          //             children: [
+          //               _buildBannerItem(Icons.call, 'Dialpad & Calling'),
+          //               const SizedBox(width: 20),
+          //               _buildBannerItem(Icons.shopping_cart, 'E-commerce'),
+          //               const SizedBox(width: 20),
+          //               _buildBannerItem(
+          //                 Icons.calendar_today,
+          //                 'Events & Scheduling',
+          //               ),
+          //               const SizedBox(width: 20),
+          //               _buildBannerItem(Icons.favorite, 'Blood Donation'),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Container(
-            height: 160,
-            margin: const EdgeInsets.all(16),
+            width: double.infinity,
+            height: 180,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Colors.purple, Colors.blue],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+              borderRadius: BorderRadius.circular(16),
+              image: const DecorationImage(
+                image: AssetImage(
+                  "assets/images/hero 1.webp",
+                ), // your banner image
+                fit: BoxFit.cover, // fills the container properly
               ),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 20,
-                  left: 20,
-                  right: 20,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        _buildBannerItem(Icons.call, 'Dialpad & Calling'),
-                        const SizedBox(width: 20),
-                        _buildBannerItem(Icons.shopping_cart, 'E-commerce'),
-                        const SizedBox(width: 20),
-                        _buildBannerItem(
-                          Icons.calendar_today,
-                          'Events & Scheduling',
-                        ),
-                        const SizedBox(width: 20),
-                        _buildBannerItem(Icons.favorite, 'Blood Donation'),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
+          const SizedBox(height: 16),
 
           // Tab Pills
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
+          // SingleChildScrollView(
+          //   scrollDirection: Axis.horizontal,
+          //   padding: const EdgeInsets.symmetric(horizontal: 16),
+          //   child: Row(
+          //     children: [
+          //       _buildTabPill('Home', true),
+          //       const SizedBox(width: 12),
+          //       _buildTabPill('E-commerce', false),
+          //       const SizedBox(width: 12),
+          //       _buildTabPill('More', false),
+          //     ],
+          //   ),
+          // ),
+          SizedBox(
+            height: 40,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
                 _buildTabPill('Home', true),
                 const SizedBox(width: 12),
@@ -77,7 +106,16 @@ class _HomeTabState extends State<HomeTab> with AutomaticKeepAliveClientMixin {
           const SizedBox(height: 24),
 
           // Recent Calls
-          const SectionHeader(title: 'Recent Calls', action: 'View All'),
+          SectionHeader(
+            title: 'Recent Calls',
+            action: 'View All',
+            onActionTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const RecentScreen()),
+              );
+            },
+          ),
           _buildRecentCallItem('Pavan Vijay Kumar', '+91 8297808410', '2m ago'),
           _buildRecentCallItem('Benz viky', '+91 8898393876', '15m ago'),
           const SizedBox(height: 24),

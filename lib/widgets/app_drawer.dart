@@ -54,8 +54,12 @@ class AppDrawer extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
+                    // Truncate long names in drawer header
                     Text(
                       profile?.name ?? 'User Name',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      softWrap: false,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,

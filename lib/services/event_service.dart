@@ -7,14 +7,16 @@ class EventService {
   static const String _baseUrl = 'https://clever-it-hazel.vercel.app';
 
   Uri _buildUri(String path, [Map<String, dynamic>? queryParameters]) {
-    return Uri.parse('$_baseUrl$path').replace(queryParameters: queryParameters);
+    return Uri.parse(
+      '$_baseUrl$path',
+    ).replace(queryParameters: queryParameters);
   }
 
   Future<Map<String, dynamic>> createEvent(Map<String, dynamic> data) async {
     final token = await AuthService.getAuthToken();
     if (token == null) throw Exception('Not authenticated');
 
-    final uri = _buildUri('/api/events');
+    final uri = _buildUri('/api/personal/calendar/events');
     final response = await http.post(
       uri,
       headers: {
@@ -44,14 +46,15 @@ class EventService {
 
     final queryParams = {
       if (view != null) 'view': view,
-      if (eventType != null) 'eventType': eventType,
+      // if (eventType != null) 'eventType': eventType,
       if (startDate != null) 'startDate': startDate,
       if (endDate != null) 'endDate': endDate,
       'page': page.toString(),
       'limit': limit.toString(),
     };
 
-    final uri = _buildUri('/api/events', queryParams);
+    final uri = _buildUri('/api/personal/calendar/events', queryParams);
+    print("Fetching events with URI: $uri");
     final response = await http.get(
       uri,
       headers: {
