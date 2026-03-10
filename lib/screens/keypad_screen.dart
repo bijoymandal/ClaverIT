@@ -525,8 +525,8 @@ class _KeypadScreenState extends State<KeypadScreen>
         boxShadow: [
           BoxShadow(
             color: Colors.black54,
-            blurRadius: 20,
-            offset: Offset(0, -5),
+            blurRadius: 10,
+            offset: Offset(0, -2),
           ),
         ],
       ),
@@ -546,9 +546,9 @@ class _KeypadScreenState extends State<KeypadScreen>
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                childAspectRatio: 1.4,
+                childAspectRatio: 2.5,
                 crossAxisSpacing: 3,
-                mainAxisSpacing: 3,
+                mainAxisSpacing: 2,
               ),
               itemCount: _keypadButtons.length,
               itemBuilder: (context, index) {
@@ -567,17 +567,18 @@ class _KeypadScreenState extends State<KeypadScreen>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Video Call Button (Dummy)
-                _buildCircularButton(
-                  icon: Icons.videocam_rounded,
-                  onPressed: () {},
-                  color: const Color(0xFF2C2C2E),
-                  size: 40,
-                ),
+                // _buildCircularButton(
+                //   icon: Icons.videocam_rounded,
+                //   onPressed: () {},
+                //   color: const Color(0xFF2C2C2E),
+                //   size: 40,
+                // ),
 
                 // Call Button
+                // _buildNeonCallButton(),
                 _buildNeonCallButton(),
 
                 // Backspace Button
@@ -635,7 +636,7 @@ class _KeypadScreenState extends State<KeypadScreen>
             children: [
               Text(
                 number,
-                style: const TextStyle(color: Colors.white, fontSize: 20),
+                style: const TextStyle(color: Colors.white, fontSize: 15),
               ),
               if (letters.isNotEmpty)
                 Text(
@@ -654,28 +655,71 @@ class _KeypadScreenState extends State<KeypadScreen>
   }
 
   // ✅ NEON GLOW CALL BUTTON
+  // Widget _buildNeonCallButton() {
+  //   return Container(
+  //     width: 25,
+  //     height: 25,
+  //     decoration: BoxDecoration(
+  //       shape: BoxShape.circle,
+  //       color: const Color(0xFF10B981),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: const Color(0xFF10B981).withValues(alpha: 0.4),
+  //           blurRadius: 20,
+  //           spreadRadius: 2,
+  //           offset: const Offset(0, 4),
+  //         ),
+  //       ],
+  //     ),
+  //     child: Material(
+  //       color: Colors.transparent,
+  //       child: InkWell(
+  //         borderRadius: BorderRadius.circular(36),
+  //         onTap: _makeCall,
+  //         child: const Icon(Icons.call, color: Colors.white, size: 32),
+  //       ),
+  //     ),
+  //   );
+  // }
   Widget _buildNeonCallButton() {
-    return Container(
-      width: 52,
-      height: 52,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: const Color(0xFF10B981),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF10B981).withValues(alpha: 0.4),
-            blurRadius: 20,
-            spreadRadius: 2,
-            offset: const Offset(0, 4),
-          ),
-        ],
+    return Expanded(
+      child: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildSimButton("SIM 1"),
+            const SizedBox(width: 12),
+            _buildSimButton("SIM 2"),
+          ],
+        ),
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(36),
-          onTap: _makeCall,
-          child: const Icon(Icons.call, color: Colors.white, size: 32),
+    );
+  }
+
+  Widget _buildSimButton(String label) {
+    return InkWell(
+      onTap: _makeCall,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        decoration: BoxDecoration(
+          color: const Color(0xFF10B981),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF10B981).withOpacity(0.4),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
