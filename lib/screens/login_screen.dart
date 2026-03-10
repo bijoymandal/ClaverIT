@@ -20,7 +20,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
   }
 
   void _goToOtpScreen() {
-    final phone = _phoneController.text.trim();
+    final phone = _phoneController.text.replaceAll(RegExp(r'\D'), '');
     if (phone.isEmpty || !RegExp(r'^[0-9]{10}$').hasMatch(phone)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Enter valid 10-digit number')),
@@ -77,36 +77,49 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 24),
+                  // const SizedBox(height: 24),
+                  // Container(
+                  //   width: 96,
+                  //   height: 96,
+                  //   decoration: const BoxDecoration(
+                  //     color: Color(0xFF003D30),
+                  //     shape: BoxShape.circle,
+                  //   ),
+                  //   child: const Icon(
+                  //     Icons.shield_outlined,
+                  //     color: Color(0xFF10B981),
+                  //     size: 40,
+                  //   ),
+                  // ),
                   Container(
-                    width: 96,
-                    height: 96,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF003D30),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.shield_outlined,
-                      color: Color(0xFF10B981),
-                      size: 40,
-                    ),
-                  ),
-                  const SizedBox(height: 28),
-                  const Text(
-                    'Welcome Back',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 42,
-                      fontWeight: FontWeight.w700,
+                    width: 250,
+                    height: 250,
+
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      image: const DecorationImage(
+                        image: AssetImage(
+                          "assets/images/welcome page.webp",
+                        ), // your banner image
+                        fit: BoxFit.cover, // fills the container properly
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  // const Text(
+                  //   'Welcome Back',
+                  //   style: TextStyle(
+                  //     color: Colors.white,
+                  //     fontSize: 42,
+                  //     fontWeight: FontWeight.w700,
+                  //   ),
+                  // ),
+                  const SizedBox(height: 2),
                   const Text(
                     'Enter your mobile number to receive OTP',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 24),
+                    style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 15),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 12),
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
@@ -135,7 +148,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                               'Phone Verification',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 30,
+                                fontSize: 20,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -145,8 +158,8 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                         const Text(
                           'Mobile Number',
                           style: TextStyle(
-                            color: Color(0xFF9CA3AF),
-                            fontSize: 24,
+                            color: Color.fromRGBO(156, 163, 175, 1),
+                            fontSize: 20,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -189,6 +202,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(10),
                                 ],
                                 maxLength: 10,
                                 style: const TextStyle(
@@ -199,6 +213,7 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                                   hintText: 'Enter mobile number',
                                   hintStyle: const TextStyle(
                                     color: Color(0xFF9CA3AF),
+                                    fontSize: 15,
                                   ),
                                   counterText: '',
                                   filled: true,
@@ -321,19 +336,19 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                   //     ],
                   //   ),
                   // ),
-                  Container(
-                    width: double.infinity,
-                    height: 180,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      image: const DecorationImage(
-                        image: AssetImage(
-                          "assets/images/dailpad2.webp",
-                        ), // your banner image
-                        fit: BoxFit.cover, // fills the container properly
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   width: double.infinity,
+                  //   height: 180,
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(16),
+                  //     image: const DecorationImage(
+                  //       image: AssetImage(
+                  //         "assets/images/dailpad2.webp",
+                  //       ), // your banner image
+                  //       fit: BoxFit.cover, // fills the container properly
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
