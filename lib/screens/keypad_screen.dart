@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import '../providers/contacts_provider.dart';
 import '../services/native_call_service.dart';
@@ -15,8 +16,10 @@ class KeypadScreen extends StatefulWidget {
 class _KeypadScreenState extends State<KeypadScreen>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   String _phoneNumber = '';
+  bool _showKeypad = true;
   late AnimationController _cursorController;
   bool _showCursor = true;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   bool get wantKeepAlive => true;
@@ -46,6 +49,19 @@ class _KeypadScreenState extends State<KeypadScreen>
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        setState(() {
+          _showKeypad = false; // hide keypad when scrolling down
+        });
+      } else if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        setState(() {
+          _showKeypad = true; // show keypad when scrolling up
+        });
+      }
+    });
     _cursorController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -216,6 +232,7 @@ class _KeypadScreenState extends State<KeypadScreen>
                           }
 
                           return ListView.builder(
+                            controller: _scrollController,
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             itemCount: suggestions.length,
                             itemBuilder: (context, index) {
@@ -258,7 +275,13 @@ class _KeypadScreenState extends State<KeypadScreen>
                 ),
 
                 // Keypad Overlay
-                Positioned(bottom: 0, left: 0, right: 0, child: _buildKeypad()),
+                if (_showKeypad)
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: _buildKeypad(),
+                  ),
               ],
             ),
     );
@@ -293,6 +316,7 @@ class _KeypadScreenState extends State<KeypadScreen>
         }
 
         return ListView.builder(
+          controller: _scrollController,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           itemCount: contacts.length,
           itemBuilder: (context, index) {
@@ -415,6 +439,9 @@ class _KeypadScreenState extends State<KeypadScreen>
       // ),
       child: TextField(
         controller: _phoneController,
+        readOnly: true,
+        showCursor: true,
+        enableInteractiveSelection: true,
         textAlign: TextAlign.center,
         cursorColor: const Color(0xFF10B981),
         style: const TextStyle(color: Colors.white, fontSize: 28),
@@ -465,6 +492,7 @@ class _KeypadScreenState extends State<KeypadScreen>
         }
 
         return ListView.builder(
+          controller: _scrollController,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           itemCount: contacts.length,
           itemBuilder: (context, index) {
@@ -615,9 +643,9 @@ class _KeypadScreenState extends State<KeypadScreen>
   Widget _buildSquircleKeypadButton(String number, String letters) {
     return Material(
       color: const Color(0xFF2C2C2E),
-      borderRadius: BorderRadius.circular(13),
+      borderRadius: BorderRadius.circular(8),
       child: InkWell(
-        borderRadius: BorderRadius.circular(13),
+        borderRadius: BorderRadius.circular(8),
 
         onTap: () => _onKeypadPressed(number),
 

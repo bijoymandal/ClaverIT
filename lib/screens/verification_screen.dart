@@ -7,6 +7,8 @@ import '../services/auth_service.dart';
 import '../providers/user_provider.dart';
 import 'dashboard_screen.dart';
 import 'registration_step1_screen.dart';
+import 'package:sms_autofill/sms_autofill.dart';
+import 'package:flutter/services.dart';
 
 enum VerificationType { phone, aadhaar }
 
@@ -28,7 +30,8 @@ class VerificationScreen extends StatefulWidget {
   State<VerificationScreen> createState() => _VerificationScreenState();
 }
 
-class _VerificationScreenState extends State<VerificationScreen> {
+class _VerificationScreenState extends State<VerificationScreen>
+    with TickerProviderStateMixin, CodeAutoFill {
   final List<TextEditingController> _otpControllers = List.generate(
     6,
     (index) => TextEditingController(),
@@ -44,11 +47,21 @@ class _VerificationScreenState extends State<VerificationScreen> {
   @override
   void initState() {
     super.initState();
+    listenForCode();
     _startTimer();
     if (widget.sendOtpOnOpen) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _requestPhoneOtp();
       });
+    }
+  }
+
+  @override
+  void codeUpdated() {
+    if (code != null && code!.length == 6) {
+      for (int i = 0; i < 6; i++) {
+        _otpControllers[i].text = code![i];
+      }
     }
   }
 
@@ -69,6 +82,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
   }
 
   Future<void> _requestPhoneOtp({bool showErrorSnack = true}) async {
+    //clear OTP fields and reset focus
+    for (var controller in _otpControllers) {
+      controller.clear();
+    }
+
+    _focusNodes.first.requestFocus();
     final phone = widget.registrationData.phoneNumber ?? '';
     if (phone.isEmpty) return;
 
@@ -569,6 +588,48 @@ class _VerificationScreenState extends State<VerificationScreen> {
     );
   }
 
+  // Widget _buildOtpBox(int index) {
+  //   return SizedBox(
+  //     width: 40,
+  //     child: TextField(
+  //       controller: _otpControllers[index],
+  //       focusNode: _focusNodes[index],
+  //       textAlign: TextAlign.center,
+  //       style: const TextStyle(
+  //         color: Colors.white,
+  //         fontSize: 20,
+  //         fontWeight: FontWeight.bold,
+  //       ),
+  //       keyboardType: TextInputType.number,
+  //       maxLength: 1,
+  //       decoration: InputDecoration(
+  //         counterText: '',
+  //         filled: true,
+  //         fillColor: const Color(0xFF2A2B2F),
+  //         contentPadding: const EdgeInsets.symmetric(vertical: 16),
+  //         border: OutlineInputBorder(
+  //           borderRadius: const BorderRadius.all(Radius.circular(14)),
+  //           borderSide: const BorderSide(color: Color(0xFF42536A)),
+  //         ),
+  //         enabledBorder: OutlineInputBorder(
+  //           borderRadius: const BorderRadius.all(Radius.circular(14)),
+  //           borderSide: const BorderSide(color: Color(0xFF42536A)),
+  //         ),
+  //         focusedBorder: OutlineInputBorder(
+  //           borderRadius: const BorderRadius.all(Radius.circular(14)),
+  //           borderSide: const BorderSide(color: Color(0xFF10B981)),
+  //         ),
+  //       ),
+  //       onChanged: (value) {
+  //         if (value.isNotEmpty && index < 5) {
+  //           _focusNodes[index + 1].requestFocus();
+  //         } else if (value.isEmpty && index > 0) {
+  //           _focusNodes[index - 1].requestFocus();
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
   Widget _buildOtpBox(int index) {
     return SizedBox(
       width: 40,
@@ -576,31 +637,50 @@ class _VerificationScreenState extends State<VerificationScreen> {
         controller: _otpControllers[index],
         focusNode: _focusNodes[index],
         textAlign: TextAlign.center,
+        keyboardType: TextInputType.number,
+        maxLength: 1,
+
         style: const TextStyle(
           color: Colors.white,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
-        keyboardType: TextInputType.number,
-        maxLength: 1,
+
         decoration: InputDecoration(
           counterText: '',
           filled: true,
           fillColor: const Color(0xFF2A2B2F),
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
           border: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(14)),
+            borderRadius: BorderRadius.circular(14),
             borderSide: const BorderSide(color: Color(0xFF42536A)),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(14)),
+            borderRadius: BorderRadius.circular(14),
             borderSide: const BorderSide(color: Color(0xFF42536A)),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(14)),
+            borderRadius: BorderRadius.circular(14),
             borderSide: const BorderSide(color: Color(0xFF10B981)),
           ),
         ),
+
+        // 🔹 OTP Paste Logic
+        onTap: () async {
+          final data = await Clipboard.getData(Clipboard.kTextPlain);
+
+          if (data != null && data.text != null) {
+            final text = data.text!.trim();
+
+            if (text.length == 6) {
+              for (int i = 0; i < 6; i++) {
+                _otpControllers[i].text = text[i];
+              }
+            }
+          }
+        },
+
+        // 🔹 Move focus automatically
         onChanged: (value) {
           if (value.isNotEmpty && index < 5) {
             _focusNodes[index + 1].requestFocus();

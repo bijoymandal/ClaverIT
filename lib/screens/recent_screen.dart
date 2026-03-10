@@ -47,9 +47,15 @@ class _RecentScreenState extends State<RecentScreen>
 
     // SIM filter
     if (_selectedFilter == 'SIM 1 - Airtel') {
-      logs = logs.where((log) => log.simDisplayName == 'Airtel').toList();
+      logs = logs.where((log) {
+        final sim = (log.simDisplayName ?? '').toLowerCase();
+        return sim.contains('airtel') || sim.contains('sim1');
+      }).toList();
     } else if (_selectedFilter == 'SIM 2 - Jio') {
-      logs = logs.where((log) => log.simDisplayName == 'Jio').toList();
+      logs = logs.where((log) {
+        final sim = (log.simDisplayName ?? '').toLowerCase();
+        return sim.contains('jio') || sim.contains('sim2');
+      }).toList();
     }
 
     // Search filter
