@@ -90,9 +90,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                       ),
-                      const Text(
-                        'Online',
-                        style: TextStyle(color: Colors.green, fontSize: 10),
+                      Text(
+                        _isOnline ? 'Online' : 'Offline',
+                        style: TextStyle(
+                          color: _isOnline ? Colors.green : Colors.red,
+                          fontSize: 10,
+                        ),
                       ),
                     ],
                   ),

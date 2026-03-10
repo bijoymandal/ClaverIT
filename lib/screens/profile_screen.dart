@@ -1,5 +1,6 @@
 import 'package:claverit/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../models/my_profile.dart';
 import '../providers/user_provider.dart';
@@ -102,7 +103,13 @@ class _ProfileScreenState extends State<ProfileScreen>
             children: [
               _buildTextField(nameController, 'Name', Icons.person),
               const SizedBox(height: 12),
-              _buildTextField(phoneController, 'Phone Number', Icons.phone),
+              _buildTextField(
+                phoneController,
+                'Phone Number',
+                Icons.phone,
+                keyboardType: TextInputType.phone,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              ),
               const SizedBox(height: 12),
               _buildTextField(designationController, 'Designation', Icons.work),
               const SizedBox(height: 12),
@@ -164,10 +171,14 @@ class _ProfileScreenState extends State<ProfileScreen>
   Widget _buildTextField(
     TextEditingController controller,
     String label,
-    IconData icon,
-  ) {
+    IconData icon, {
+    TextInputType keyboardType = TextInputType.text,
+    List<TextInputFormatter>? inputFormatters,
+  }) {
     return TextField(
       controller: controller,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,

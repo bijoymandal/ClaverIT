@@ -19,6 +19,7 @@
         "permission_handler",
         "provider",
         "shared_preferences",
+        "sms_autofill",
         "sqflite",
         "uuid"
       ],
@@ -625,6 +626,21 @@
       "dependencies": [
         "meta",
         "path"
+      ]
+    },
+    {
+      "name": "sms_autofill",
+      "version": "2.4.1",
+      "dependencies": [
+        "flutter",
+        "pin_input_text_field"
+      ]
+    },
+    {
+      "name": "pin_input_text_field",
+      "version": "4.5.2",
+      "dependencies": [
+        "flutter"
       ]
     }
   ],

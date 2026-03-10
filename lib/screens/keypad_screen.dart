@@ -24,6 +24,7 @@ class _KeypadScreenState extends State<KeypadScreen>
   // Search State
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   String _searchQuery = '';
 
   // Keypad button configuration with alphabets
@@ -66,16 +67,47 @@ class _KeypadScreenState extends State<KeypadScreen>
     super.dispose();
   }
 
+  List getSuggestedContacts(List contacts) {
+    if (_phoneNumber.isEmpty) return [];
+
+    return contacts.where((contact) {
+      final number = contact.phoneNumber.replaceAll(RegExp(r'\D'), '');
+      return number.contains(_phoneNumber);
+    }).toList();
+  }
+
   void _onKeypadPressed(String value) {
+    // setState(() {
+    //   _phoneNumber += value;
+    // });
+    final text = _phoneController.text;
+    _phoneController.text = text + value;
+
+    _phoneController.selection = TextSelection.fromPosition(
+      TextPosition(offset: _phoneController.text.length),
+    );
     setState(() {
-      _phoneNumber += value;
+      _phoneNumber = _phoneController.text;
     });
   }
 
   void _onBackspace() {
-    if (_phoneNumber.isNotEmpty) {
+    // if (_phoneNumber.isNotEmpty) {
+    //   setState(() {
+    //     _phoneNumber = _phoneNumber.substring(0, _phoneNumber.length - 1);
+    //   });
+    // }
+    final text = _phoneController.text;
+
+    if (text.isNotEmpty) {
+      _phoneController.text = text.substring(0, text.length - 1);
+
+      _phoneController.selection = TextSelection.fromPosition(
+        TextPosition(offset: _phoneController.text.length),
+      );
+
       setState(() {
-        _phoneNumber = _phoneNumber.substring(0, _phoneNumber.length - 1);
+        _phoneNumber = _phoneController.text;
       });
     }
   }
@@ -171,10 +203,57 @@ class _KeypadScreenState extends State<KeypadScreen>
                 Column(
                   children: [
                     // Recent Contacts Section
-                    Expanded(child: _buildRecentContactsList()),
+                    // Expanded(child: _buildRecentContactsList()),
+                    Expanded(
+                      child: Consumer<ContactsProvider>(
+                        builder: (context, provider, child) {
+                          final suggestions = getSuggestedContacts(
+                            provider.contacts,
+                          );
+
+                          if (suggestions.isEmpty) {
+                            return _buildRecentContactsList();
+                          }
+
+                          return ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            itemCount: suggestions.length,
+                            itemBuilder: (context, index) {
+                              final contact = suggestions[index];
+
+                              return ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: const Color(0xFF10B981),
+                                  child: Text(contact.initials),
+                                ),
+                                title: Text(
+                                  contact.name,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                subtitle: Text(
+                                  contact.phoneNumber,
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
+                                trailing: const Icon(
+                                  Icons.call,
+                                  color: Color(0xFF10B981),
+                                ),
+
+                                onTap: () {
+                                  setState(() {
+                                    _phoneNumber = contact.phoneNumber;
+                                    _phoneController.text = contact.phoneNumber;
+                                  });
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
 
                     // Spacer for Keypad
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.55),
+                    // SizedBox(height: MediaQuery.of(context).size.height * 0.55),
                   ],
                 ),
 
@@ -258,7 +337,10 @@ class _KeypadScreenState extends State<KeypadScreen>
                 ),
                 trailing: const Icon(Icons.call, color: Color(0xFF10B981)),
                 onTap: () {
-                  NativeCallService().startCall(contact.phoneNumber);
+                  // NativeCallService().startCall(contact.phoneNumber);
+                  setState(() {
+                    _phoneNumber = contact.phoneNumber;
+                  });
                 },
               ),
             );
@@ -271,36 +353,90 @@ class _KeypadScreenState extends State<KeypadScreen>
   Widget _buildPhoneNumberDisplay() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
         color: const Color(0xFF1C1C1E),
         borderRadius: BorderRadius.circular(24),
       ),
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Text(
-              _phoneNumber,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.w400,
-                letterSpacing: 1,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-            ),
-          ),
-          if (_phoneNumber.isNotEmpty && _showCursor)
-            Container(
-              width: 2,
-              height: 28,
-              color: const Color(0xFF10B981),
-              margin: const EdgeInsets.only(left: 4),
-            ),
-        ],
+      // margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      // child: Row(
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      //   children: [
+      //     Expanded(
+      //       child: Text(
+      //         _phoneNumber,
+      //         style: const TextStyle(
+      //           color: Colors.white,
+      //           fontSize: 28,
+      //           fontWeight: FontWeight.w400,
+      //           letterSpacing: 1,
+      //         ),
+      //         textAlign: TextAlign.center,
+      //         maxLines: 1,
+      //       ),
+      //     ),
+      //     if (_phoneNumber.isNotEmpty && _showCursor)
+      //       Container(
+      //         width: 2,
+      //         height: 28,
+      //         color: const Color(0xFF10B981),
+      //         margin: const EdgeInsets.only(left: 4),
+      //       ),
+      //   ],
+      // ),
+      //centered version with cursor as part of text
+      // child: Center(
+      //   child: RichText(
+      //     textAlign: TextAlign.center,
+      //     text: TextSpan(
+      //       children: [
+      //         TextSpan(
+      //           text: _phoneNumber,
+      //           style: const TextStyle(
+      //             color: Colors.white,
+      //             fontSize: 28,
+      //             fontWeight: FontWeight.w400,
+      //             letterSpacing: 0,
+      //           ),
+      //         ),
+      //         if (_showCursor)
+      //           const TextSpan(
+      //             text: "|",
+      //             style: TextStyle(
+      //               color: Color(0xFF10B981),
+      //               fontSize: 28,
+      //               fontWeight: FontWeight.w300,
+      //             ),
+      //           ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
+      child: TextField(
+        controller: _phoneController,
+        textAlign: TextAlign.center,
+        cursorColor: const Color(0xFF10B981),
+        style: const TextStyle(color: Colors.white, fontSize: 28),
+        keyboardType: TextInputType.phone,
+        decoration: const InputDecoration(border: InputBorder.none),
+
+        // 🔑 Always move cursor to end
+        onTap: () {
+          _phoneController.selection = TextSelection.fromPosition(
+            TextPosition(offset: _phoneController.text.length),
+          );
+        },
+
+        onChanged: (value) {
+          _phoneController.selection = TextSelection.fromPosition(
+            TextPosition(offset: value.length),
+          );
+
+          setState(() {
+            _phoneNumber = value;
+          });
+        },
       ),
     );
   }
@@ -445,11 +581,25 @@ class _KeypadScreenState extends State<KeypadScreen>
                 _buildNeonCallButton(),
 
                 // Backspace Button
-                _buildCircularButton(
-                  icon: Icons.backspace_outlined,
-                  onPressed: _onBackspace,
-                  color: const Color(0xFF2C2C2E),
-                  size: 40,
+                // _buildCircularButton(
+                //   icon: Icons.backspace_outlined,
+                //   onPressed: _onBackspace,
+                //   color: const Color(0xFF2C2C2E),
+                //   size: 40,
+                // ),
+                GestureDetector(
+                  onTap: _onBackspace,
+                  onLongPress: () {
+                    setState(() {
+                      _phoneNumber = '';
+                    });
+                  },
+                  child: _buildCircularButton(
+                    icon: Icons.backspace_outlined,
+                    onPressed: _onBackspace,
+                    color: const Color(0xFF2C2C2E),
+                    size: 40,
+                  ),
                 ),
               ],
             ),
@@ -463,39 +613,37 @@ class _KeypadScreenState extends State<KeypadScreen>
   // ✅ SQUIRCLE KEYPAD BUTTON (Rounded Rectangle)
   Widget _buildSquircleKeypadButton(String number, String letters) {
     return Material(
-      color: const Color(0xFF2C2C2E), // Solid dark grey
+      color: const Color(0xFF2C2C2E),
       borderRadius: BorderRadius.circular(13),
       child: InkWell(
         borderRadius: BorderRadius.circular(13),
+
         onTap: () => _onKeypadPressed(number),
+
+        onLongPress: () {
+          if (number == "0") {
+            setState(() {
+              _phoneNumber += "+";
+            });
+          }
+        },
+
         child: Container(
           alignment: Alignment.center,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(13)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Large Number
               Text(
                 number,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  height: 1.0,
-                ),
+                style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
-              // Small Alphabets below number
               if (letters.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 1),
-                  child: Text(
-                    letters,
-                    style: TextStyle(
-                      color: Colors.grey.withValues(alpha: 0.6),
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: 1.0,
-                    ),
+                Text(
+                  letters,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 10,
+                    letterSpacing: 1,
                   ),
                 ),
             ],

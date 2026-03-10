@@ -254,6 +254,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "pin_input_text_field",
+      "rootUri": "file:///Users/bijoymandal/.pub-cache/hosted/pub.dev/pin_input_text_field-4.5.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.13"
+    },
+    {
       "name": "platform",
       "rootUri": "file:///Users/bijoymandal/.pub-cache/hosted/pub.dev/platform-3.1.6",
       "packageUri": "lib/",
@@ -318,6 +324,12 @@
       "rootUri": "file:///Users/bijoymandal/development/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.8"
+    },
+    {
+      "name": "sms_autofill",
+      "rootUri": "file:///Users/bijoymandal/.pub-cache/hosted/pub.dev/sms_autofill-2.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "source_span",

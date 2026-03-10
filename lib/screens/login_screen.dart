@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:claverit/models/registration_data.dart';
 import 'verification_screen.dart';
 
@@ -185,7 +186,10 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                             Expanded(
                               child: TextField(
                                 controller: _phoneController,
-                                keyboardType: TextInputType.phone,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
                                 maxLength: 10,
                                 style: const TextStyle(
                                   color: Colors.white,

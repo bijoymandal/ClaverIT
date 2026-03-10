@@ -32,6 +32,9 @@ dependencies:
   call_log: ^6.0.1
   uuid: ^4.4.0
 
+  #copy to clipboard
+  sms_autofill: ^2.3.0
+
   # Video playback for splash logo/video
   # video_player: ^2.5.1
 
