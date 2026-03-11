@@ -123,7 +123,10 @@ class _RecentScreenState extends State<RecentScreen>
     }
 
     try {
-      await NativeCallService().startCall(phoneNumber);
+      await NativeCallService().startCall(
+        phoneNumber,
+        0,
+      ); // Default to SIM 1 for now
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

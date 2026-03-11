@@ -93,42 +93,52 @@ class _KeypadScreenState extends State<KeypadScreen>
   }
 
   void _onKeypadPressed(String value) {
-    // setState(() {
-    //   _phoneNumber += value;
-    // });
     final text = _phoneController.text;
-    _phoneController.text = text + value;
+    final selection = _phoneController.selection;
 
-    _phoneController.selection = TextSelection.fromPosition(
-      TextPosition(offset: _phoneController.text.length),
+    int start = selection.start;
+    int end = selection.end;
+
+    if (start < 0) start = text.length;
+    if (end < 0) end = text.length;
+
+    final newText = text.replaceRange(start, end, value);
+
+    _phoneController.value = TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: start + value.length),
     );
+
     setState(() {
-      _phoneNumber = _phoneController.text;
+      _phoneNumber = newText;
     });
   }
 
   void _onBackspace() {
-    // if (_phoneNumber.isNotEmpty) {
-    //   setState(() {
-    //     _phoneNumber = _phoneNumber.substring(0, _phoneNumber.length - 1);
-    //   });
-    // }
     final text = _phoneController.text;
+    final selection = _phoneController.selection;
 
-    if (text.isNotEmpty) {
-      _phoneController.text = text.substring(0, text.length - 1);
+    if (text.isEmpty) return;
 
-      _phoneController.selection = TextSelection.fromPosition(
-        TextPosition(offset: _phoneController.text.length),
-      );
+    int cursorPosition = selection.start;
 
-      setState(() {
-        _phoneNumber = _phoneController.text;
-      });
-    }
+    if (cursorPosition < 0) cursorPosition = text.length;
+    if (cursorPosition == 0) return;
+
+    final newText = text.replaceRange(cursorPosition - 1, cursorPosition, '');
+
+    _phoneController.text = newText;
+
+    _phoneController.selection = TextSelection.collapsed(
+      offset: cursorPosition - 1,
+    );
+
+    setState(() {
+      _phoneNumber = newText;
+    });
   }
 
-  Future<void> _makeCall() async {
+  Future<void> _makeCall(int simSlot) async {
     if (_phoneNumber.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -140,7 +150,7 @@ class _KeypadScreenState extends State<KeypadScreen>
     }
 
     try {
-      await NativeCallService().startCall(_phoneNumber);
+      await NativeCallService().startCall(_phoneNumber, simSlot);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -377,8 +387,8 @@ class _KeypadScreenState extends State<KeypadScreen>
   Widget _buildPhoneNumberDisplay() {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: const Color(0xFF1C1C1E),
         borderRadius: BorderRadius.circular(24),
@@ -449,16 +459,15 @@ class _KeypadScreenState extends State<KeypadScreen>
         decoration: const InputDecoration(border: InputBorder.none),
 
         // 🔑 Always move cursor to end
-        onTap: () {
-          _phoneController.selection = TextSelection.fromPosition(
-            TextPosition(offset: _phoneController.text.length),
-          );
-        },
-
+        // onTap: () {
+        //   _phoneController.selection = TextSelection.fromPosition(
+        //     TextPosition(offset: _phoneController.text.length),
+        //   );
+        // },
         onChanged: (value) {
-          _phoneController.selection = TextSelection.fromPosition(
-            TextPosition(offset: value.length),
-          );
+          // _phoneController.selection = TextSelection.fromPosition(
+          //   TextPosition(offset: value.length),
+          // );
 
           setState(() {
             _phoneNumber = value;
@@ -565,7 +574,7 @@ class _KeypadScreenState extends State<KeypadScreen>
           if (_phoneNumber.isNotEmpty)
             _buildPhoneNumberDisplay()
           else
-            const SizedBox(height: 20), // Spacer when no number
+            const SizedBox(height: 10), // Spacer when no number
           // Keypad Grid
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -619,6 +628,12 @@ class _KeypadScreenState extends State<KeypadScreen>
                 GestureDetector(
                   onTap: _onBackspace,
                   onLongPress: () {
+                    _phoneController.text = '';
+                    _phoneController.clear();
+                    _phoneController.selection = const TextSelection.collapsed(
+                      offset: 0,
+                    );
+
                     setState(() {
                       _phoneNumber = '';
                     });
@@ -650,11 +665,13 @@ class _KeypadScreenState extends State<KeypadScreen>
         onTap: () => _onKeypadPressed(number),
 
         onLongPress: () {
-          if (number == "0") {
-            setState(() {
-              _phoneNumber += "+";
-            });
-          }
+          _phoneController.clear();
+
+          _phoneController.selection = const TextSelection.collapsed(offset: 0);
+
+          setState(() {
+            _phoneNumber = '';
+          });
         },
 
         child: Container(
@@ -715,18 +732,18 @@ class _KeypadScreenState extends State<KeypadScreen>
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildSimButton("SIM 1"),
+            _buildSimButton("SIM 1", 0),
             const SizedBox(width: 12),
-            _buildSimButton("SIM 2"),
+            _buildSimButton("SIM 2", 1),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSimButton(String label) {
+  Widget _buildSimButton(String label, int simSlot) {
     return InkWell(
-      onTap: _makeCall,
+      onTap: () => _makeCall(simSlot),
       borderRadius: BorderRadius.circular(10),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),

@@ -54,6 +54,14 @@
       ]
     },
     {
+      "name": "sms_autofill",
+      "version": "2.4.1",
+      "dependencies": [
+        "flutter",
+        "pin_input_text_field"
+      ]
+    },
+    {
       "name": "uuid",
       "version": "4.5.3",
       "dependencies": [
@@ -267,6 +275,13 @@
         "stream_channel",
         "string_scanner",
         "term_glyph"
+      ]
+    },
+    {
+      "name": "pin_input_text_field",
+      "version": "4.5.2",
+      "dependencies": [
+        "flutter"
       ]
     },
     {
@@ -626,21 +641,6 @@
       "dependencies": [
         "meta",
         "path"
-      ]
-    },
-    {
-      "name": "sms_autofill",
-      "version": "2.4.1",
-      "dependencies": [
-        "flutter",
-        "pin_input_text_field"
-      ]
-    },
-    {
-      "name": "pin_input_text_field",
-      "version": "4.5.2",
-      "dependencies": [
-        "flutter"
       ]
     }
   ],

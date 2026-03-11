@@ -658,7 +658,7 @@ class _ContactsScreenState extends State<ContactsScreen>
               icon: const Icon(Icons.phone, color: Color(0xFF10B981), size: 24),
               onPressed: () async {
                 try {
-                  await NativeCallService().startCall(contact.phoneNumber);
+                  await NativeCallService().startCall(contact.phoneNumber, 0);
                 } catch (e) {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(

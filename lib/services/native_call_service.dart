@@ -11,7 +11,15 @@ class NativeCallService {
 
   NativeCallService._internal();
 
-  Future<void> startCall(String phoneNumber) async {
-    await _channel.invokeMethod('startCall', {'phoneNumber': phoneNumber});
+  Future<int> getSimCount() async {
+    final int simCount = await _channel.invokeMethod("getSimCount");
+    return simCount;
+  }
+
+  Future<void> startCall(String phoneNumber, int simSlot) async {
+    await _channel.invokeMethod('startCall', {
+      'phoneNumber': phoneNumber,
+      'simSlot': simSlot,
+    });
   }
 }
