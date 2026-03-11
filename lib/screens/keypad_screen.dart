@@ -1,5 +1,7 @@
+import 'package:claverit/services/sim_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../providers/contacts_provider.dart';
 import '../services/native_call_service.dart';
@@ -16,6 +18,7 @@ class KeypadScreen extends StatefulWidget {
 class _KeypadScreenState extends State<KeypadScreen>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   String _phoneNumber = '';
+  List<String> _simNames = [];
   bool _showKeypad = true;
   late AnimationController _cursorController;
   bool _showCursor = true;
@@ -49,6 +52,7 @@ class _KeypadScreenState extends State<KeypadScreen>
   @override
   void initState() {
     super.initState();
+    _loadSims();
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
@@ -81,6 +85,18 @@ class _KeypadScreenState extends State<KeypadScreen>
     _cursorController.dispose();
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadSims() async {
+    var status = await Permission.phone.request();
+    if (status.isGranted) {
+      final sims = await SimService.getSimProviders();
+      setState(() {
+        _simNames = sims;
+      });
+    } else {
+      print("Phone permission denied");
+    }
   }
 
   List getSuggestedContacts(List contacts) {
@@ -731,11 +747,19 @@ class _KeypadScreenState extends State<KeypadScreen>
       child: Center(
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildSimButton("SIM 1", 0),
-            const SizedBox(width: 12),
-            _buildSimButton("SIM 2", 1),
-          ],
+          // children: [
+          //   // _buildSimButton("SIM 1", 0),
+          //   _buildSimButton(_simNames.length > 0 ? _simNames[0] : "SIM 1", 0),
+          //   const SizedBox(width: 12),
+          //   // _buildSimButton("SIM 2", 1),
+          //   _buildSimButton(_simNames.length > 1 ? _simNames[1] : "SIM 2", 1),
+          // ],
+          children: List.generate(_simNames.length, (index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: _buildSimButton(_simNames[index], index),
+            );
+          }),
         ),
       ),
     );
