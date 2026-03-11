@@ -1,3 +1,4 @@
+import 'package:claverit/services/sim_service.dart';
 import 'package:flutter/material.dart';
 import 'package:call_log/call_log.dart' as call_log_package;
 import 'package:permission_handler/permission_handler.dart';
@@ -17,6 +18,7 @@ class RecentScreen extends StatefulWidget {
 class _RecentScreenState extends State<RecentScreen>
     with AutomaticKeepAliveClientMixin {
   List<CallLogEntry> _callLogs = [];
+  List<String> _simNames = [];
   bool _isLoading = true;
   bool _permissionDenied = false;
   String _selectedFilter = 'Both';
@@ -34,6 +36,7 @@ class _RecentScreenState extends State<RecentScreen>
   void initState() {
     super.initState();
     _loadCallLogs();
+    _loadSimNames();
   }
 
   @override
@@ -42,28 +45,49 @@ class _RecentScreenState extends State<RecentScreen>
     super.dispose();
   }
 
+  Future<void> _loadSimNames() async {
+    try {
+      final status = await Permission.phone.request();
+
+      if (!status.isGranted) return;
+
+      final sims = await SimService.getSimProviders();
+
+      setState(() {
+        _simNames = sims;
+      });
+    } catch (e) {
+      debugPrint("SIM load error: $e");
+    }
+  }
+
   List<CallLogEntry> get _filteredLogs {
     List<CallLogEntry> logs = _callLogs;
 
-    // SIM filter
-    if (_selectedFilter == 'SIM 1 - Airtel') {
+    if (_selectedFilter != 'Both') {
+      int simSlot = 0;
+
+      if (_selectedFilter.startsWith('SIM 1')) {
+        simSlot = 1;
+      } else if (_selectedFilter.startsWith('SIM 2')) {
+        simSlot = 2;
+      }
+
       logs = logs.where((log) {
         final sim = (log.simDisplayName ?? '').toLowerCase();
-        return sim.contains('airtel') || sim.contains('sim1');
-      }).toList();
-    } else if (_selectedFilter == 'SIM 2 - Jio') {
-      logs = logs.where((log) {
-        final sim = (log.simDisplayName ?? '').toLowerCase();
-        return sim.contains('jio') || sim.contains('sim2');
+
+        return sim.contains('$simSlot') ||
+            sim.contains('$simSlot') ||
+            sim.contains('$simSlot');
       }).toList();
     }
 
-    // Search filter
     if (_searchQuery.isNotEmpty) {
       logs = logs.where((log) {
         final name = log.displayName.toLowerCase();
         final number = (log.number ?? '').replaceAll(RegExp(r'\D'), '');
         final query = _searchQuery.toLowerCase();
+
         return name.contains(query) || number.contains(query);
       }).toList();
     }
@@ -208,9 +232,17 @@ class _RecentScreenState extends State<RecentScreen>
               children: [
                 _buildFilterChip('Both'),
                 const SizedBox(width: 12),
-                _buildFilterChip('SIM 1 - Airtel'), // Dummy selected
-                const SizedBox(width: 12),
-                _buildFilterChip('SIM 2 - Jio'),
+
+                if (_simNames.isNotEmpty)
+                  ..._simNames.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final name = entry.value;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: _buildFilterChip("SIM ${index + 1} - $name"),
+                    );
+                  }).toList(),
               ],
             ),
           ),

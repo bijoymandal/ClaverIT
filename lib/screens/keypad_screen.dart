@@ -403,66 +403,12 @@ class _KeypadScreenState extends State<KeypadScreen>
   Widget _buildPhoneNumberDisplay() {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: const Color(0xFF1C1C1E),
         borderRadius: BorderRadius.circular(24),
       ),
-      // margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      // child: Row(
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   children: [
-      //     Expanded(
-      //       child: Text(
-      //         _phoneNumber,
-      //         style: const TextStyle(
-      //           color: Colors.white,
-      //           fontSize: 28,
-      //           fontWeight: FontWeight.w400,
-      //           letterSpacing: 1,
-      //         ),
-      //         textAlign: TextAlign.center,
-      //         maxLines: 1,
-      //       ),
-      //     ),
-      //     if (_phoneNumber.isNotEmpty && _showCursor)
-      //       Container(
-      //         width: 2,
-      //         height: 28,
-      //         color: const Color(0xFF10B981),
-      //         margin: const EdgeInsets.only(left: 4),
-      //       ),
-      //   ],
-      // ),
-      //centered version with cursor as part of text
-      // child: Center(
-      //   child: RichText(
-      //     textAlign: TextAlign.center,
-      //     text: TextSpan(
-      //       children: [
-      //         TextSpan(
-      //           text: _phoneNumber,
-      //           style: const TextStyle(
-      //             color: Colors.white,
-      //             fontSize: 28,
-      //             fontWeight: FontWeight.w400,
-      //             letterSpacing: 0,
-      //           ),
-      //         ),
-      //         if (_showCursor)
-      //           const TextSpan(
-      //             text: "|",
-      //             style: TextStyle(
-      //               color: Color(0xFF10B981),
-      //               fontSize: 28,
-      //               fontWeight: FontWeight.w300,
-      //             ),
-      //           ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
       child: TextField(
         controller: _phoneController,
         readOnly: true,
@@ -560,7 +506,50 @@ class _KeypadScreenState extends State<KeypadScreen>
                     fontSize: 14,
                   ),
                 ),
-                trailing: const Icon(Icons.call, color: Color(0xFF10B981)),
+                onTap: () {
+                  final number = contact.phoneNumber.replaceAll(
+                    RegExp(r'\D'),
+                    '',
+                  );
+
+                  _phoneController.text = number;
+                  _phoneController.selection = TextSelection.collapsed(
+                    offset: number.length,
+                  );
+
+                  setState(() {
+                    _phoneNumber = number;
+                    _showKeypad = true; // show keypad
+                  });
+
+                  // scroll to bottom so keypad is visible
+                  Future.delayed(const Duration(milliseconds: 200), () {
+                    if (_scrollController.hasClients) {
+                      _scrollController.animateTo(
+                        _scrollController.position.maxScrollExtent,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOut,
+                      );
+                    }
+                  });
+                },
+                trailing: IconButton(
+                  onPressed: () {
+                    final number = contact.phoneNumber.replaceAll(
+                      RegExp(r'\D'),
+                      '',
+                    );
+                    _phoneController.text = number;
+                    _phoneController.selection = TextSelection.collapsed(
+                      offset: number.length,
+                    );
+                    setState(() {
+                      _phoneNumber = number;
+                      _showKeypad = true; // show keypad
+                    });
+                  },
+                  icon: const Icon(Icons.call, color: Color(0xFF10B981)),
+                ),
               ),
             );
           },
@@ -571,7 +560,7 @@ class _KeypadScreenState extends State<KeypadScreen>
 
   Widget _buildKeypad() {
     return Container(
-      padding: const EdgeInsets.only(top: 15, bottom: 15),
+      padding: const EdgeInsets.only(top: 0, bottom: 15),
       decoration: const BoxDecoration(
         color: Color(0xFF1C1C1E), // Dark container for keypad
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
@@ -590,7 +579,7 @@ class _KeypadScreenState extends State<KeypadScreen>
           if (_phoneNumber.isNotEmpty)
             _buildPhoneNumberDisplay()
           else
-            const SizedBox(height: 10), // Spacer when no number
+            const SizedBox(height: 4), // Spacer when no number
           // Keypad Grid
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -614,7 +603,7 @@ class _KeypadScreenState extends State<KeypadScreen>
             ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
 
           // Action Buttons Row
           Padding(
@@ -641,30 +630,30 @@ class _KeypadScreenState extends State<KeypadScreen>
                 //   color: const Color(0xFF2C2C2E),
                 //   size: 40,
                 // ),
-                GestureDetector(
-                  onTap: _onBackspace,
-                  onLongPress: () {
-                    _phoneController.text = '';
-                    _phoneController.clear();
-                    _phoneController.selection = const TextSelection.collapsed(
-                      offset: 0,
-                    );
+                if (_phoneNumber.isNotEmpty)
+                  GestureDetector(
+                    onTap: _onBackspace,
+                    onLongPress: () {
+                      _phoneController.text = '';
+                      _phoneController.clear();
+                      _phoneController.selection =
+                          const TextSelection.collapsed(offset: 0);
 
-                    setState(() {
-                      _phoneNumber = '';
-                    });
-                  },
-                  child: _buildCircularButton(
-                    icon: Icons.backspace_outlined,
-                    onPressed: _onBackspace,
-                    color: const Color(0xFF2C2C2E),
-                    size: 40,
+                      setState(() {
+                        _phoneNumber = '';
+                      });
+                    },
+                    child: _buildCircularButton(
+                      icon: Icons.backspace_outlined,
+                      onPressed: _onBackspace,
+                      color: const Color(0xFF2C2C2E),
+                      size: 40,
+                    ),
                   ),
-                ),
               ],
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 3),
         ],
       ),
     );
@@ -747,17 +736,13 @@ class _KeypadScreenState extends State<KeypadScreen>
       child: Center(
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          // children: [
-          //   // _buildSimButton("SIM 1", 0),
-          //   _buildSimButton(_simNames.length > 0 ? _simNames[0] : "SIM 1", 0),
-          //   const SizedBox(width: 12),
-          //   // _buildSimButton("SIM 2", 1),
-          //   _buildSimButton(_simNames.length > 1 ? _simNames[1] : "SIM 2", 1),
-          // ],
           children: List.generate(_simNames.length, (index) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: _buildSimButton(_simNames[index], index),
+              child: _buildSimButton(
+                "${index + 1} - ${_simNames[index]}",
+                index,
+              ),
             );
           }),
         ),

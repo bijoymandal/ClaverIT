@@ -353,19 +353,19 @@ class _ContactsScreenState extends State<ContactsScreen>
       body: Column(
         children: [
           // SIM Filter Row
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                _buildFilterChip('Both', false),
-                const SizedBox(width: 12),
-                _buildFilterChip('SIM 1 - Airtel', true), // Dummy selected
-                const SizedBox(width: 12),
-                _buildFilterChip('SIM 2 - Jio', false),
-              ],
-            ),
-          ),
+          // SingleChildScrollView(
+          //   scrollDirection: Axis.horizontal,
+          //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          //   child: Row(
+          //     children: [
+          //       _buildFilterChip('Both', false),
+          //       const SizedBox(width: 12),
+          //       _buildFilterChip('SIM 1 - Airtel', true), // Dummy selected
+          //       const SizedBox(width: 12),
+          //       _buildFilterChip('SIM 2 - Jio', false),
+          //     ],
+          //   ),
+          // ),
 
           // Contact List
           Expanded(
