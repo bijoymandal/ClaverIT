@@ -6,6 +6,7 @@ class CallLogEntry {
   final int? timestamp;
   final int? duration;
   final String? simDisplayName;
+  final int? simSlot;
   final CallType? callType;
   final String? cachedMatchedNumber;
 
@@ -15,6 +16,7 @@ class CallLogEntry {
     this.timestamp,
     this.duration,
     this.simDisplayName,
+    required this.simSlot,
     this.callType,
     this.cachedMatchedNumber,
   });
@@ -27,6 +29,7 @@ class CallLogEntry {
       timestamp: callLogEntry.timestamp,
       duration: callLogEntry.duration,
       simDisplayName: callLogEntry.simDisplayName,
+      simSlot: callLogEntry.phoneAccountId == '1' ? 1 : 2,
       // Note: 'callType' coming from the package is usually an enum (CallType)
       // but sometimes it is treated as dynamic. We convert it safely.
       callType: _parseCallType(callLogEntry.callType),
@@ -169,7 +172,7 @@ class CallLogEntry {
 
   @override
   String toString() {
-    return 'CallLogEntry(name: $name, number: $number, type: $callType, date: $formattedDate)';
+    return 'CallLogEntry(name: $name, number: $number, type: $callType, date: $formattedDate,simName: $simSlot)';
   }
 }
 

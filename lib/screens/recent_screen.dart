@@ -7,6 +7,9 @@ import '../services/native_call_service.dart';
 import '../utils/color_utils.dart';
 
 import '../widgets/app_drawer.dart';
+import '../models/my_profile.dart';
+import 'profile_screen.dart';
+import 'login_screen.dart';
 
 class RecentScreen extends StatefulWidget {
   const RecentScreen({super.key});
@@ -21,8 +24,10 @@ class _RecentScreenState extends State<RecentScreen>
   List<String> _simNames = [];
   bool _isLoading = true;
   bool _permissionDenied = false;
-  String _selectedFilter = 'Both';
+  String _selectedSimFilter = 'Both';
+  String _selectedCallType = 'All';
   String? _error;
+  bool _permissionGranted = false;
 
   // Search State
   bool _isSearching = false;
@@ -64,31 +69,57 @@ class _RecentScreenState extends State<RecentScreen>
   List<CallLogEntry> get _filteredLogs {
     List<CallLogEntry> logs = _callLogs;
 
-    if (_selectedFilter != 'Both') {
-      int simSlot = 0;
-
-      if (_selectedFilter.startsWith('SIM 1')) {
-        simSlot = 1;
-      } else if (_selectedFilter.startsWith('SIM 2')) {
-        simSlot = 2;
+    /// SIM FILTER
+    if (_selectedSimFilter.isNotEmpty) {
+      // Normalize label (strip counts like 'SIM1 (3)' or 'CarrierName (2)')
+      final filterLabel = _selectedSimFilter.split('(').first.trim();
+      if (filterLabel != 'Both') {
+        if (filterLabel.startsWith('SIM')) {
+          final slot = int.tryParse(filterLabel.replaceAll('SIM', '')) ?? 0;
+          logs = logs.where((log) => log.simSlot == slot).toList();
+        } else {
+          // Match by sim display name
+          logs = logs
+              .where(
+                (log) => (log.simDisplayName ?? '').toLowerCase().contains(
+                  filterLabel.toLowerCase(),
+                ),
+              )
+              .toList();
+        }
       }
+    }
 
+    /// CALL TYPE FILTER
+    if (_selectedCallType != 'All') {
       logs = logs.where((log) {
-        final sim = (log.simDisplayName ?? '').toLowerCase();
+        switch (_selectedCallType) {
+          case 'Missed':
+            return log.callType == CallType.missed;
 
-        return sim.contains('$simSlot') ||
-            sim.contains('$simSlot') ||
-            sim.contains('$simSlot');
+          case 'Received':
+            return log.callType == CallType.incoming;
+
+          case 'Outgoing':
+            return log.callType == CallType.outgoing;
+
+          case 'Rejected':
+            return log.callType == CallType.rejected;
+
+          default:
+            return true;
+        }
       }).toList();
     }
 
+    /// SEARCH
     if (_searchQuery.isNotEmpty) {
       logs = logs.where((log) {
         final name = log.displayName.toLowerCase();
         final number = (log.number ?? '').replaceAll(RegExp(r'\D'), '');
-        final query = _searchQuery.toLowerCase();
 
-        return name.contains(query) || number.contains(query);
+        return name.contains(_searchQuery.toLowerCase()) ||
+            number.contains(_searchQuery);
       }).toList();
     }
 
@@ -103,25 +134,35 @@ class _RecentScreenState extends State<RecentScreen>
     });
 
     try {
-      final PermissionStatus status = await Permission.phone.request();
+      // Request phone and contacts permissions to ensure READ_CALL_LOG access
+      final statuses = await [Permission.phone, Permission.contacts].request();
+      final phoneGranted = statuses[Permission.phone]?.isGranted ?? false;
+      final contactsGranted = statuses[Permission.contacts]?.isGranted ?? false;
 
-      if (!status.isGranted) {
+      if (!phoneGranted) {
         setState(() {
           _permissionDenied = true;
+          _permissionGranted = false;
           _isLoading = false;
+          _error = 'Phone permission required to read call history';
         });
         return;
       }
 
+      setState(() {
+        _permissionGranted = true;
+      });
+
       final Iterable<call_log_package.CallLogEntry> entries =
           await call_log_package.CallLog.get();
 
-      final List<CallLogEntry> logs = entries
-          .map((entry) => CallLogEntry.fromCallLog(entry))
-          .toList();
+      final List<CallLogEntry> logs =
+          entries.map((entry) => CallLogEntry.fromCallLog(entry)).toList()
+            ..sort((a, b) => (b.timestamp ?? 0).compareTo(a.timestamp ?? 0));
 
       setState(() {
         _callLogs = logs;
+        _permissionDenied = false;
         _isLoading = false;
       });
 
@@ -166,6 +207,10 @@ class _RecentScreenState extends State<RecentScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    // Diagnostic counts for SIM filtering
+    final int _totalCount = _callLogs.length;
+    final int _sim1Count = _callLogs.where((l) => l.simSlot == 1).length;
+    final int _sim2Count = _callLogs.where((l) => l.simSlot == 2).length;
     return Scaffold(
       backgroundColor: Colors.black,
       drawer: const AppDrawer(),
@@ -225,24 +270,49 @@ class _RecentScreenState extends State<RecentScreen>
       body: Column(
         children: [
           // SIM Filter Row
+          // Debug / Info Row
+          // if (_isLoading == false)
+          //   Padding(
+          //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //       children: [
+          //         Text(
+          //           'Entries: ${_callLogs.length}',
+          //           style: const TextStyle(color: Colors.grey),
+          //         ),
+          //         Row(
+          //           children: [
+          //             Text(
+          //               'Permission: ${_permissionGranted ? 'Granted' : 'Denied'}',
+          //               style: TextStyle(
+          //                 color: _permissionGranted ? Colors.green : Colors.red,
+          //               ),
+          //             ),
+          //             const SizedBox(width: 8),
+          //             ElevatedButton(
+          //               onPressed: _loadCallLogs,
+          //               style: ElevatedButton.styleFrom(
+          //                 backgroundColor: const Color(0xFF10B981),
+          //               ),
+          //               child: const Text('Refresh'),
+          //             ),
+          //           ],
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // Call Type Row
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                _buildFilterChip('Both'),
-                const SizedBox(width: 12),
-
-                if (_simNames.isNotEmpty)
-                  ..._simNames.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final name = entry.value;
-
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: _buildFilterChip("SIM ${index + 1} - $name"),
-                    );
-                  }).toList(),
+                _buildCallTypeChip("All"),
+                _buildCallTypeChip("Missed"),
+                _buildCallTypeChip("Received"),
+                _buildCallTypeChip("Outgoing"),
+                _buildCallTypeChip("Rejected"),
               ],
             ),
           ),
@@ -255,12 +325,12 @@ class _RecentScreenState extends State<RecentScreen>
   }
 
   Widget _buildFilterChip(String label) {
-    final bool isSelected = _selectedFilter == label;
+    final bool isSelected = _selectedSimFilter == label;
 
     return GestureDetector(
       onTap: () {
         setState(() {
-          _selectedFilter = label;
+          _selectedSimFilter = label;
         });
       },
       child: Container(
@@ -278,6 +348,30 @@ class _RecentScreenState extends State<RecentScreen>
             color: isSelected ? Colors.white : Colors.grey,
             fontWeight: FontWeight.w500,
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCallTypeChip(String label) {
+    final isSelected = _selectedCallType == label;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedCallType = label;
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.only(right: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFF10B981) : const Color(0xFF1C1C1E),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(color: isSelected ? Colors.white : Colors.grey),
         ),
       ),
     );
@@ -732,6 +826,17 @@ class _RecentScreenState extends State<RecentScreen>
   Widget _buildCallLogItem(CallLogEntry log, int index) {
     // Generate a gradient based on the name
     final gradient = ColorUtils.getAvatarGradient(log.displayName);
+    // Count how many times this number appears in the current filtered logs
+    final int callCount = _filteredLogs.where((l) {
+      final a = (l.number ?? '').replaceAll(RegExp(r'\D'), '');
+      final b = (log.number ?? '').replaceAll(RegExp(r'\D'), '');
+      if (a.isNotEmpty && b.isNotEmpty) return a == b;
+      return l.displayName == log.displayName;
+    }).length;
+
+    final String displayNameWithCount = callCount > 1
+        ? '${log.displayName} (${callCount})'
+        : log.displayName;
 
     return InkWell(
       onLongPress: () => _showOptionsBottomSheet(log, index),
@@ -744,21 +849,24 @@ class _RecentScreenState extends State<RecentScreen>
         ),
         child: Row(
           children: [
-            // Avatar
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                gradient: gradient,
-                shape: BoxShape.circle,
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                _getInitials(log.displayName),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+            // Avatar (tap to view profile or prompt to register)
+            GestureDetector(
+              onTap: () => _onAvatarTap(log),
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  gradient: gradient,
+                  shape: BoxShape.circle,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  _getInitials(log.displayName),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
               ),
             ),
@@ -770,7 +878,7 @@ class _RecentScreenState extends State<RecentScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    log.displayName,
+                    displayNameWithCount,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -786,7 +894,7 @@ class _RecentScreenState extends State<RecentScreen>
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          '${log.formattedNumber} • ${log.formattedDate}',
+                          '• ${log.formattedDate} • SIM${log.simSlot} ${log.simDisplayName ?? ''}',
                           style: TextStyle(
                             color: Colors.grey.shade500,
                             fontSize: 13,
@@ -820,5 +928,72 @@ class _RecentScreenState extends State<RecentScreen>
       return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
     }
     return name[0].toUpperCase();
+  }
+
+  Future<void> _onAvatarTap(CallLogEntry log) async {
+    try {
+      final profile = await MyProfile.load();
+      final bool registered =
+          (profile.name.isNotEmpty || profile.phoneNumber.isNotEmpty);
+
+      if (registered) {
+        if (!mounted) return;
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (context) => const ProfileScreen()));
+      } else {
+        if (!mounted) return;
+        // Not registered - prompt to register / login
+        final goToRegister = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: const Color(0xFF2A2A2A),
+            title: const Text(
+              'Not Registered',
+              style: TextStyle(color: Colors.white),
+            ),
+            content: const Text(
+              'This app profile is not set up. Would you like to register or login now?',
+              style: TextStyle(color: Colors.white70),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF10B981),
+                ),
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text(
+                  'Register',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        );
+
+        if (goToRegister == true) {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const PhoneInputScreen()),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Error checking profile: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to open profile'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }
