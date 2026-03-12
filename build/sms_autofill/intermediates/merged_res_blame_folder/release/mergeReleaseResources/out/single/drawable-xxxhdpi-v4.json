@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "com.jaumard.smsautofill.sms_autofill-release-26:/drawable-xxxhdpi-v4/ic_call_decline_low.png",
+        "source": "com.jaumard.smsautofill.sms_autofill-core-1.13.1-18:/drawable-xxxhdpi-v4/ic_call_decline_low.png"
+    },
+    {
+        "merged": "com.jaumard.smsautofill.sms_autofill-release-26:/drawable-xxxhdpi-v4/ic_call_answer_video_low.png",
+        "source": "com.jaumard.smsautofill.sms_autofill-core-1.13.1-18:/drawable-xxxhdpi-v4/ic_call_answer_video_low.png"
+    },
+    {
+        "merged": "com.jaumard.smsautofill.sms_autofill-release-26:/drawable-xxxhdpi-v4/ic_call_answer_video.png",
+        "source": "com.jaumard.smsautofill.sms_autofill-core-1.13.1-18:/drawable-xxxhdpi-v4/ic_call_answer_video.png"
+    },
+    {
+        "merged": "com.jaumard.smsautofill.sms_autofill-release-26:/drawable-xxxhdpi-v4/ic_call_decline.png",
+        "source": "com.jaumard.smsautofill.sms_autofill-core-1.13.1-18:/drawable-xxxhdpi-v4/ic_call_decline.png"
+    },
+    {
+        "merged": "com.jaumard.smsautofill.sms_autofill-release-26:/drawable-xxxhdpi-v4/ic_call_answer.png",
+        "source": "com.jaumard.smsautofill.sms_autofill-core-1.13.1-18:/drawable-xxxhdpi-v4/ic_call_answer.png"
+    },
+    {
+        "merged": "com.jaumard.smsautofill.sms_autofill-release-26:/drawable-xxxhdpi-v4/ic_call_answer_low.png",
+        "source": "com.jaumard.smsautofill.sms_autofill-core-1.13.1-18:/drawable-xxxhdpi-v4/ic_call_answer_low.png"
+    }
+]

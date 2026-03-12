@@ -1,0 +1,31 @@
+<variant
+    name="release"
+    package="com.jaumard.smsautofill"
+    minSdkVersion="18"
+    targetSdkVersion="18"
+    mergedManifest="/Volumes/MYSSD/FlutterProject/ClaverIT/build/sms_autofill/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml"
+    manifestMergeReport="/Volumes/MYSSD/FlutterProject/ClaverIT/build/sms_autofill/outputs/logs/manifest-merger-release-report.txt"
+    proguardFiles="/Volumes/MYSSD/FlutterProject/ClaverIT/build/sms_autofill/intermediates/default_proguard_files/global/proguard-android.txt-8.11.1"
+    partialResultsDir="/Volumes/MYSSD/FlutterProject/ClaverIT/build/sms_autofill/intermediates/lint_partial_results/release/lintAnalyzeRelease/out">
+  <buildFeatures
+      namespacing="REQUIRED"/>
+  <sourceProviders>
+    <sourceProvider
+        manifests="src/main/AndroidManifest.xml"
+        javaDirectories="src/main/java:src/release/java:src/main/kotlin:src/release/kotlin"
+        resDirectories="src/main/res:src/release/res"
+        assetsDirectories="src/main/assets:src/release/assets"/>
+  </sourceProviders>
+  <testSourceProviders>
+  </testSourceProviders>
+  <testFixturesSourceProviders>
+  </testFixturesSourceProviders>
+  <artifact
+      classOutputs="/Volumes/MYSSD/FlutterProject/ClaverIT/build/sms_autofill/intermediates/javac/release/compileReleaseJavaWithJavac/classes:/Volumes/MYSSD/FlutterProject/ClaverIT/build/sms_autofill/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar"
+      type="MAIN"
+      applicationId="com.jaumard.smsautofill"
+      generatedSourceFolders="/Volumes/MYSSD/FlutterProject/ClaverIT/build/sms_autofill/generated/ap_generated_sources/release/out"
+      generatedResourceFolders="/Volumes/MYSSD/FlutterProject/ClaverIT/build/sms_autofill/generated/res/resValues/release"
+      desugaredMethodsFiles="/Users/bijoymandal/.gradle/caches/8.13/transforms/899138f4e91709e2b5d736d2291b7def/transformed/D8BackportedDesugaredMethods.txt">
+  </artifact>
+</variant>

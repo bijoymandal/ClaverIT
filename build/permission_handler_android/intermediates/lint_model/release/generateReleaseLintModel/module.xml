@@ -1,0 +1,19 @@
+<lint-module
+    format="1"
+    dir="/Users/bijoymandal/.pub-cache/hosted/pub.dev/permission_handler_android-13.0.1/android"
+    name=":permission_handler_android"
+    type="LIBRARY"
+    maven="com.baseflow.permissionhandler:permission_handler_android:1.0"
+    agpVersion="8.11.1"
+    buildFolder="/Volumes/MYSSD/FlutterProject/ClaverIT/build/permission_handler_android"
+    bootClassPath="/Users/bijoymandal/Library/Android/sdk/platforms/android-35/android.jar:/Users/bijoymandal/Library/Android/sdk/build-tools/35.0.0/core-lambda-stubs.jar"
+    javaSourceLevel="17"
+    compileTarget="android-35"
+    neverShrinking="true">
+  <lintOptions
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>

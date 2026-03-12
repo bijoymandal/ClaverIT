@@ -1,0 +1,1 @@
+/Volumes/MYSSD/FlutterProject/ClaverIT/android/app/build/intermediates/cxx/release/4w48405g/obj/armeabi-v7a

@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "com.jaumard.smsautofill.sms_autofill-release-26:/animator/fragment_close_exit.xml",
+        "source": "com.jaumard.smsautofill.sms_autofill-fragment-1.7.1-1:/animator/fragment_close_exit.xml"
+    },
+    {
+        "merged": "com.jaumard.smsautofill.sms_autofill-release-26:/animator/fragment_fade_exit.xml",
+        "source": "com.jaumard.smsautofill.sms_autofill-fragment-1.7.1-1:/animator/fragment_fade_exit.xml"
+    },
+    {
+        "merged": "com.jaumard.smsautofill.sms_autofill-release-26:/animator/fragment_fade_enter.xml",
+        "source": "com.jaumard.smsautofill.sms_autofill-fragment-1.7.1-1:/animator/fragment_fade_enter.xml"
+    },
+    {
+        "merged": "com.jaumard.smsautofill.sms_autofill-release-26:/animator/fragment_close_enter.xml",
+        "source": "com.jaumard.smsautofill.sms_autofill-fragment-1.7.1-1:/animator/fragment_close_enter.xml"
+    },
+    {
+        "merged": "com.jaumard.smsautofill.sms_autofill-release-26:/animator/fragment_open_exit.xml",
+        "source": "com.jaumard.smsautofill.sms_autofill-fragment-1.7.1-1:/animator/fragment_open_exit.xml"
+    },
+    {
+        "merged": "com.jaumard.smsautofill.sms_autofill-release-26:/animator/fragment_open_enter.xml",
+        "source": "com.jaumard.smsautofill.sms_autofill-fragment-1.7.1-1:/animator/fragment_open_enter.xml"
+    }
+]

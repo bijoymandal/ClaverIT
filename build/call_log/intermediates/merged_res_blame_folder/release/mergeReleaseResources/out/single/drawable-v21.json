@@ -1,0 +1,6 @@
+[
+    {
+        "merged": "sk.fourq.calllog.call_log-release-25:/drawable-v21/notification_action_background.xml",
+        "source": "sk.fourq.calllog.call_log-core-1.13.1-16:/drawable-v21/notification_action_background.xml"
+    }
+]

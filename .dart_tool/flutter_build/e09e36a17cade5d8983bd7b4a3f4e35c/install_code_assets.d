@@ -1,0 +1,1 @@
+ /Volumes/MYSSD/FlutterProject/ClaverIT/.dart_tool/flutter_build/e09e36a17cade5d8983bd7b4a3f4e35c/native_assets.json: 

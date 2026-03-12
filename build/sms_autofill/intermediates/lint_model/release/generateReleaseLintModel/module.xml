@@ -1,0 +1,26 @@
+<lint-module
+    format="1"
+    dir="/Users/bijoymandal/.pub-cache/hosted/pub.dev/sms_autofill-2.4.1/android"
+    name=":sms_autofill"
+    type="LIBRARY"
+    maven="com.jaumard.smsautofill:sms_autofill:1.0-SNAPSHOT"
+    agpVersion="8.11.1"
+    buildFolder="/Volumes/MYSSD/FlutterProject/ClaverIT/build/sms_autofill"
+    bootClassPath="/Users/bijoymandal/Library/Android/sdk/platforms/android-34/android.jar:/Users/bijoymandal/Library/Android/sdk/build-tools/35.0.0/core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-34"
+    neverShrinking="true">
+  <lintOptions
+      disable="InvalidPackage"
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true">
+    <severities>
+      <severity
+        id="InvalidPackage"
+        severity="IGNORE" />
+    </severities>
+  </lintOptions>
+  <variant name="release"/>
+</lint-module>

@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "co.quis.flutter_contacts-release-25:/drawable-xxhdpi-v4/ic_call_answer_low.png",
+        "source": "co.quis.flutter_contacts-core-1.13.1-16:/drawable-xxhdpi-v4/ic_call_answer_low.png"
+    },
+    {
+        "merged": "co.quis.flutter_contacts-release-25:/drawable-xxhdpi-v4/ic_call_answer_video_low.png",
+        "source": "co.quis.flutter_contacts-core-1.13.1-16:/drawable-xxhdpi-v4/ic_call_answer_video_low.png"
+    },
+    {
+        "merged": "co.quis.flutter_contacts-release-25:/drawable-xxhdpi-v4/ic_call_answer.png",
+        "source": "co.quis.flutter_contacts-core-1.13.1-16:/drawable-xxhdpi-v4/ic_call_answer.png"
+    },
+    {
+        "merged": "co.quis.flutter_contacts-release-25:/drawable-xxhdpi-v4/ic_call_answer_video.png",
+        "source": "co.quis.flutter_contacts-core-1.13.1-16:/drawable-xxhdpi-v4/ic_call_answer_video.png"
+    },
+    {
+        "merged": "co.quis.flutter_contacts-release-25:/drawable-xxhdpi-v4/ic_call_decline_low.png",
+        "source": "co.quis.flutter_contacts-core-1.13.1-16:/drawable-xxhdpi-v4/ic_call_decline_low.png"
+    },
+    {
+        "merged": "co.quis.flutter_contacts-release-25:/drawable-xxhdpi-v4/ic_call_decline.png",
+        "source": "co.quis.flutter_contacts-core-1.13.1-16:/drawable-xxhdpi-v4/ic_call_decline.png"
+    }
+]
